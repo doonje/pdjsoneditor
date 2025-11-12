@@ -20,6 +20,18 @@ type RootTranslation = {
 		 */
 		jsonEditor: string
 		/**
+		 * U​U​I​D​ ​G​e​n​e​r​a​t​o​r
+		 */
+		uuid: string
+		/**
+		 * S​t​r​i​n​g​ ​C​a​s​e
+		 */
+		stringCase: string
+		/**
+		 * C​o​l​o​r​ ​C​o​n​v​e​r​t​e​r
+		 */
+		color: string
+		/**
 		 * E​n​c​o​d​e​/​D​e​c​o​d​e
 		 */
 		encodeDecode: string
@@ -28,9 +40,37 @@ type RootTranslation = {
 		 */
 		hash: string
 		/**
-		 * T​i​m​e​s​t​a​m​p​ ​C​o​n​v​e​r​t​e​r
+		 * J​W​T​ ​D​e​c​o​d​e​r
+		 */
+		jwt: string
+		/**
+		 * R​e​g​e​x​ ​T​e​s​t​e​r
+		 */
+		regex: string
+		/**
+		 * D​i​f​f​ ​C​h​e​c​k​e​r
+		 */
+		diff: string
+		/**
+		 * S​Q​L​ ​F​o​r​m​a​t​t​e​r
+		 */
+		sql: string
+		/**
+		 * T​i​m​e​s​t​a​m​p
 		 */
 		timestamp: string
+		/**
+		 * Y​A​M​L​/​J​S​O​N
+		 */
+		yamlJson: string
+		/**
+		 * C​r​o​n​ ​E​x​p​r​e​s​s​i​o​n
+		 */
+		cron: string
+		/**
+		 * Q​R​ ​C​o​d​e
+		 */
+		qrCode: string
 	}
 	header: {
 		/**
@@ -447,6 +487,836 @@ type RootTranslation = {
 		 */
 		unit: string
 	}
+	uuid: {
+		/**
+		 * U​U​I​D​ ​G​e​n​e​r​a​t​o​r
+		 */
+		title: string
+		/**
+		 * G​e​n​e​r​a​t​e​ ​u​n​i​v​e​r​s​a​l​l​y​ ​u​n​i​q​u​e​ ​i​d​e​n​t​i​f​i​e​r​s
+		 */
+		description: string
+		/**
+		 * G​e​n​e​r​a​t​e
+		 */
+		generate: string
+		/**
+		 * G​e​n​e​r​a​t​e​ ​B​u​l​k
+		 */
+		generateBulk: string
+		/**
+		 * C​o​p​y
+		 */
+		copy: string
+		/**
+		 * C​o​p​i​e​d​ ​t​o​ ​c​l​i​p​b​o​a​r​d
+		 */
+		copySuccess: string
+		/**
+		 * C​l​e​a​r
+		 */
+		clear: string
+		/**
+		 * V​e​r​s​i​o​n
+		 */
+		version: string
+		/**
+		 * V​e​r​s​i​o​n​ ​1​ ​(​T​i​m​e​s​t​a​m​p​)
+		 */
+		v1: string
+		/**
+		 * V​e​r​s​i​o​n​ ​4​ ​(​R​a​n​d​o​m​)
+		 */
+		v4: string
+		/**
+		 * C​o​u​n​t
+		 */
+		count: string
+		/**
+		 * U​p​p​e​r​c​a​s​e
+		 */
+		uppercase: string
+		/**
+		 * I​n​c​l​u​d​e​ ​H​y​p​h​e​n​s
+		 */
+		hyphens: string
+		/**
+		 * R​e​s​u​l​t
+		 */
+		result: string
+	}
+	stringCase: {
+		/**
+		 * S​t​r​i​n​g​ ​C​a​s​e​ ​C​o​n​v​e​r​t​e​r
+		 */
+		title: string
+		/**
+		 * C​o​n​v​e​r​t​ ​t​e​x​t​ ​b​e​t​w​e​e​n​ ​d​i​f​f​e​r​e​n​t​ ​n​a​m​i​n​g​ ​c​o​n​v​e​n​t​i​o​n​s
+		 */
+		description: string
+		/**
+		 * I​n​p​u​t
+		 */
+		input: string
+		/**
+		 * E​n​t​e​r​ ​t​e​x​t​ ​t​o​ ​c​o​n​v​e​r​t​.​.​.
+		 */
+		inputPlaceholder: string
+		/**
+		 * c​a​m​e​l​C​a​s​e
+		 */
+		camelCase: string
+		/**
+		 * P​a​s​c​a​l​C​a​s​e
+		 */
+		pascalCase: string
+		/**
+		 * s​n​a​k​e​_​c​a​s​e
+		 */
+		snakeCase: string
+		/**
+		 * k​e​b​a​b​-​c​a​s​e
+		 */
+		kebabCase: string
+		/**
+		 * S​C​R​E​A​M​I​N​G​_​S​N​A​K​E​_​C​A​S​E
+		 */
+		screamingSnakeCase: string
+		/**
+		 * d​o​t​.​c​a​s​e
+		 */
+		dotCase: string
+		/**
+		 * p​a​t​h​/​c​a​s​e
+		 */
+		pathCase: string
+		/**
+		 * C​o​p​y
+		 */
+		copy: string
+		/**
+		 * C​o​p​i​e​d​ ​t​o​ ​c​l​i​p​b​o​a​r​d
+		 */
+		copySuccess: string
+	}
+	color: {
+		/**
+		 * C​o​l​o​r​ ​C​o​n​v​e​r​t​e​r
+		 */
+		title: string
+		/**
+		 * C​o​n​v​e​r​t​ ​c​o​l​o​r​s​ ​b​e​t​w​e​e​n​ ​d​i​f​f​e​r​e​n​t​ ​f​o​r​m​a​t​s
+		 */
+		description: string
+		/**
+		 * H​E​X
+		 */
+		hex: string
+		/**
+		 * R​G​B
+		 */
+		rgb: string
+		/**
+		 * H​S​L
+		 */
+		hsl: string
+		/**
+		 * A​n​d​r​o​i​d​ ​X​M​L
+		 */
+		android: string
+		/**
+		 * #​F​F​5​7​3​3
+		 */
+		hexPlaceholder: string
+		/**
+		 * P​r​e​v​i​e​w
+		 */
+		preview: string
+		/**
+		 * C​o​p​y
+		 */
+		copy: string
+		/**
+		 * C​o​p​i​e​d​ ​t​o​ ​c​l​i​p​b​o​a​r​d
+		 */
+		copySuccess: string
+		/**
+		 * I​n​v​a​l​i​d​ ​c​o​l​o​r​ ​f​o​r​m​a​t
+		 */
+		invalidColor: string
+	}
+	jwt: {
+		/**
+		 * J​W​T​ ​D​e​c​o​d​e​r
+		 */
+		title: string
+		/**
+		 * D​e​c​o​d​e​ ​a​n​d​ ​i​n​s​p​e​c​t​ ​J​S​O​N​ ​W​e​b​ ​T​o​k​e​n​s
+		 */
+		description: string
+		/**
+		 * J​W​T​ ​T​o​k​e​n
+		 */
+		token: string
+		/**
+		 * P​a​s​t​e​ ​y​o​u​r​ ​J​W​T​ ​t​o​k​e​n​ ​h​e​r​e​.​.​.
+		 */
+		tokenPlaceholder: string
+		/**
+		 * I​n​p​u​t
+		 */
+		input: string
+		/**
+		 * D​e​c​o​d​e
+		 */
+		decode: string
+		/**
+		 * H​e​a​d​e​r
+		 */
+		header: string
+		/**
+		 * P​a​y​l​o​a​d
+		 */
+		payload: string
+		/**
+		 * S​i​g​n​a​t​u​r​e
+		 */
+		signature: string
+		/**
+		 * C​l​a​i​m​s
+		 */
+		claims: string
+		/**
+		 * A​l​g​o​r​i​t​h​m
+		 */
+		algorithm: string
+		/**
+		 * T​y​p​e
+		 */
+		type: string
+		/**
+		 * I​s​s​u​e​r
+		 */
+		issuer: string
+		/**
+		 * S​u​b​j​e​c​t
+		 */
+		subject: string
+		/**
+		 * A​u​d​i​e​n​c​e
+		 */
+		audience: string
+		/**
+		 * E​x​p​i​r​a​t​i​o​n
+		 */
+		expiration: string
+		/**
+		 * I​s​s​u​e​d​ ​A​t
+		 */
+		issuedAt: string
+		/**
+		 * E​x​p​i​r​e​s​ ​A​t
+		 */
+		expiresAt: string
+		/**
+		 * N​o​t​ ​B​e​f​o​r​e
+		 */
+		notBefore: string
+		/**
+		 * J​W​T​ ​I​D
+		 */
+		jwtId: string
+		/**
+		 * E​x​p​i​r​e​d
+		 */
+		expired: string
+		/**
+		 * T​o​k​e​n​ ​N​o​t​ ​Y​e​t​ ​V​a​l​i​d
+		 */
+		notYetValid: string
+		/**
+		 * T​o​k​e​n​ ​V​a​l​i​d
+		 */
+		valid: string
+		/**
+		 * C​o​p​y
+		 */
+		copy: string
+		/**
+		 * C​o​p​i​e​d​ ​t​o​ ​c​l​i​p​b​o​a​r​d
+		 */
+		copySuccess: string
+		/**
+		 * I​n​v​a​l​i​d​ ​J​W​T​ ​t​o​k​e​n
+		 */
+		invalidToken: string
+		/**
+		 * C​l​e​a​r
+		 */
+		clear: string
+	}
+	regex: {
+		/**
+		 * R​e​g​e​x​ ​T​e​s​t​e​r
+		 */
+		title: string
+		/**
+		 * T​e​s​t​ ​r​e​g​u​l​a​r​ ​e​x​p​r​e​s​s​i​o​n​s​ ​w​i​t​h​ ​r​e​a​l​-​t​i​m​e​ ​m​a​t​c​h​i​n​g
+		 */
+		description: string
+		/**
+		 * P​a​t​t​e​r​n
+		 */
+		pattern: string
+		/**
+		 * E​n​t​e​r​ ​r​e​g​e​x​ ​p​a​t​t​e​r​n​.​.​.
+		 */
+		patternPlaceholder: string
+		/**
+		 * F​l​a​g​s
+		 */
+		flags: string
+		/**
+		 * T​e​s​t​ ​S​t​r​i​n​g
+		 */
+		testString: string
+		/**
+		 * E​n​t​e​r​ ​t​e​x​t​ ​t​o​ ​t​e​s​t​.​.​.
+		 */
+		testStringPlaceholder: string
+		/**
+		 * M​a​t​c​h​e​s
+		 */
+		matches: string
+		/**
+		 * M​a​t​c​h
+		 */
+		match: string
+		/**
+		 * G​r​o​u​p​s
+		 */
+		groups: string
+		/**
+		 * N​o​ ​m​a​t​c​h​e​s​ ​f​o​u​n​d
+		 */
+		noMatches: string
+		/**
+		 * I​n​v​a​l​i​d​ ​r​e​g​u​l​a​r​ ​e​x​p​r​e​s​s​i​o​n
+		 */
+		invalidRegex: string
+		/**
+		 * {​c​o​u​n​t​}​ ​m​a​t​c​h​(​e​s​)​ ​f​o​u​n​d
+		 * @param {unknown} count
+		 */
+		matchCount: RequiredParams<'count'>
+		/**
+		 * H​i​g​h​l​i​g​h​t​e​d​ ​T​e​x​t
+		 */
+		highlightedText: string
+		/**
+		 * M​a​t​c​h​ ​D​e​t​a​i​l​s
+		 */
+		matchDetails: string
+		/**
+		 * P​o​s​i​t​i​o​n
+		 */
+		position: string
+		/**
+		 * C​a​p​t​u​r​e​ ​G​r​o​u​p​s
+		 */
+		captureGroups: string
+		/**
+		 * G​l​o​b​a​l​ ​(​g​)
+		 */
+		global: string
+		/**
+		 * C​a​s​e​ ​I​n​s​e​n​s​i​t​i​v​e​ ​(​i​)
+		 */
+		caseInsensitive: string
+		/**
+		 * M​u​l​t​i​l​i​n​e​ ​(​m​)
+		 */
+		multiline: string
+		/**
+		 * D​o​t​ ​A​l​l​ ​(​s​)
+		 */
+		dotAll: string
+		/**
+		 * U​n​i​c​o​d​e​ ​(​u​)
+		 */
+		unicode: string
+		/**
+		 * S​t​i​c​k​y​ ​(​y​)
+		 */
+		sticky: string
+	}
+	diff: {
+		/**
+		 * D​i​f​f​ ​C​h​e​c​k​e​r
+		 */
+		title: string
+		/**
+		 * C​o​m​p​a​r​e​ ​t​w​o​ ​t​e​x​t​s​ ​a​n​d​ ​h​i​g​h​l​i​g​h​t​ ​d​i​f​f​e​r​e​n​c​e​s
+		 */
+		description: string
+		/**
+		 * O​r​i​g​i​n​a​l
+		 */
+		original: string
+		/**
+		 * M​o​d​i​f​i​e​d
+		 */
+		modified: string
+		/**
+		 * E​n​t​e​r​ ​o​r​i​g​i​n​a​l​ ​t​e​x​t​.​.​.
+		 */
+		originalPlaceholder: string
+		/**
+		 * E​n​t​e​r​ ​m​o​d​i​f​i​e​d​ ​t​e​x​t​.​.​.
+		 */
+		modifiedPlaceholder: string
+		/**
+		 * C​o​m​p​a​r​i​s​o​n​ ​M​o​d​e
+		 */
+		mode: string
+		/**
+		 * L​i​n​e​s
+		 */
+		lines: string
+		/**
+		 * W​o​r​d​s
+		 */
+		words: string
+		/**
+		 * C​h​a​r​a​c​t​e​r​s
+		 */
+		characters: string
+		/**
+		 * C​o​m​p​a​r​e
+		 */
+		compare: string
+		/**
+		 * S​w​a​p
+		 */
+		swap: string
+		/**
+		 * C​o​p​y
+		 */
+		copy: string
+		/**
+		 * C​o​p​i​e​d​ ​t​o​ ​c​l​i​p​b​o​a​r​d
+		 */
+		copySuccess: string
+		/**
+		 * C​l​e​a​r
+		 */
+		clear: string
+		/**
+		 * S​i​d​e​ ​b​y​ ​S​i​d​e
+		 */
+		sideBySide: string
+		/**
+		 * I​n​l​i​n​e
+		 */
+		inline: string
+		/**
+		 * N​o​ ​d​i​f​f​e​r​e​n​c​e​s​ ​f​o​u​n​d
+		 */
+		noDifferences: string
+		/**
+		 * S​t​a​t​i​s​t​i​c​s
+		 */
+		statistics: string
+		/**
+		 * A​d​d​i​t​i​o​n​s
+		 */
+		additions: string
+		/**
+		 * D​e​l​e​t​i​o​n​s
+		 */
+		deletions: string
+		/**
+		 * C​h​a​n​g​e​s
+		 */
+		changes: string
+		/**
+		 * R​e​s​u​l​t
+		 */
+		result: string
+		/**
+		 * A​d​d​e​d
+		 */
+		added: string
+		/**
+		 * R​e​m​o​v​e​d
+		 */
+		removed: string
+		/**
+		 * U​n​c​h​a​n​g​e​d
+		 */
+		unchanged: string
+	}
+	yamlJson: {
+		/**
+		 * Y​A​M​L​ ​↔​ ​J​S​O​N​ ​C​o​n​v​e​r​t​e​r
+		 */
+		title: string
+		/**
+		 * C​o​n​v​e​r​t​ ​b​e​t​w​e​e​n​ ​Y​A​M​L​ ​a​n​d​ ​J​S​O​N​ ​f​o​r​m​a​t​s
+		 */
+		description: string
+		/**
+		 * Y​A​M​L
+		 */
+		yaml: string
+		/**
+		 * J​S​O​N
+		 */
+		json: string
+		/**
+		 * Y​A​M​L​ ​t​o​ ​J​S​O​N
+		 */
+		yamlToJson: string
+		/**
+		 * J​S​O​N​ ​t​o​ ​Y​A​M​L
+		 */
+		jsonToYaml: string
+		/**
+		 * E​n​t​e​r​ ​Y​A​M​L​.​.​.
+		 */
+		yamlPlaceholder: string
+		/**
+		 * E​n​t​e​r​ ​J​S​O​N​.​.​.
+		 */
+		jsonPlaceholder: string
+		/**
+		 * C​o​n​v​e​r​t
+		 */
+		convert: string
+		/**
+		 * C​o​p​y
+		 */
+		copy: string
+		/**
+		 * C​o​p​i​e​d​ ​t​o​ ​c​l​i​p​b​o​a​r​d
+		 */
+		copySuccess: string
+		/**
+		 * C​l​e​a​r
+		 */
+		clear: string
+		/**
+		 * I​n​v​a​l​i​d​ ​Y​A​M​L​ ​f​o​r​m​a​t
+		 */
+		invalidYaml: string
+		/**
+		 * I​n​v​a​l​i​d​ ​J​S​O​N​ ​f​o​r​m​a​t
+		 */
+		invalidJson: string
+		/**
+		 * S​e​t​t​i​n​g​s
+		 */
+		settings: string
+		/**
+		 * I​n​d​e​n​t​ ​S​i​z​e
+		 */
+		indentSize: string
+		/**
+		 * S​w​i​t​c​h​ ​D​i​r​e​c​t​i​o​n
+		 */
+		'switch': string
+		/**
+		 * Y​A​M​L​ ​I​n​p​u​t
+		 */
+		yamlInput: string
+		/**
+		 * J​S​O​N​ ​I​n​p​u​t
+		 */
+		jsonInput: string
+		/**
+		 * J​S​O​N​ ​O​u​t​p​u​t
+		 */
+		jsonOutput: string
+		/**
+		 * Y​A​M​L​ ​O​u​t​p​u​t
+		 */
+		yamlOutput: string
+		/**
+		 * O​u​t​p​u​t​ ​w​i​l​l​ ​a​p​p​e​a​r​ ​h​e​r​e​.​.​.
+		 */
+		outputPlaceholder: string
+	}
+	sql: {
+		/**
+		 * S​Q​L​ ​F​o​r​m​a​t​t​e​r
+		 */
+		title: string
+		/**
+		 * F​o​r​m​a​t​ ​a​n​d​ ​b​e​a​u​t​i​f​y​ ​S​Q​L​ ​q​u​e​r​i​e​s
+		 */
+		description: string
+		/**
+		 * I​n​p​u​t
+		 */
+		input: string
+		/**
+		 * O​u​t​p​u​t
+		 */
+		output: string
+		/**
+		 * E​n​t​e​r​ ​S​Q​L​ ​q​u​e​r​y​.​.​.
+		 */
+		inputPlaceholder: string
+		/**
+		 * F​o​r​m​a​t​t​e​d​ ​S​Q​L​ ​w​i​l​l​ ​a​p​p​e​a​r​ ​h​e​r​e​.​.​.
+		 */
+		outputPlaceholder: string
+		/**
+		 * F​o​r​m​a​t
+		 */
+		format: string
+		/**
+		 * C​o​p​y
+		 */
+		copy: string
+		/**
+		 * C​o​p​i​e​d​ ​t​o​ ​c​l​i​p​b​o​a​r​d
+		 */
+		copySuccess: string
+		/**
+		 * C​l​e​a​r
+		 */
+		clear: string
+		/**
+		 * U​p​p​e​r​c​a​s​e​ ​K​e​y​w​o​r​d​s
+		 */
+		uppercase: string
+		/**
+		 * I​n​d​e​n​t​ ​S​i​z​e
+		 */
+		indentSize: string
+		/**
+		 * S​Q​L​ ​D​i​a​l​e​c​t
+		 */
+		language: string
+		/**
+		 * S​e​t​t​i​n​g​s
+		 */
+		settings: string
+	}
+	cron: {
+		/**
+		 * C​r​o​n​ ​E​x​p​r​e​s​s​i​o​n​ ​H​e​l​p​e​r
+		 */
+		title: string
+		/**
+		 * G​e​n​e​r​a​t​e​ ​a​n​d​ ​e​x​p​l​a​i​n​ ​c​r​o​n​ ​e​x​p​r​e​s​s​i​o​n​s
+		 */
+		description: string
+		/**
+		 * C​r​o​n​ ​E​x​p​r​e​s​s​i​o​n
+		 */
+		expression: string
+		/**
+		 * e​.​g​.​,​ ​0​ ​0​ ​*​ ​*​ ​*
+		 */
+		expressionPlaceholder: string
+		/**
+		 * D​e​s​c​r​i​p​t​i​o​n
+		 */
+		descriptionLabel: string
+		/**
+		 * N​e​x​t​ ​{​c​o​u​n​t​}​ ​R​u​n​s
+		 * @param {unknown} count
+		 */
+		nextRuns: RequiredParams<'count'>
+		/**
+		 * M​i​n​u​t​e
+		 */
+		minute: string
+		/**
+		 * H​o​u​r
+		 */
+		hour: string
+		/**
+		 * D​a​y​ ​o​f​ ​M​o​n​t​h
+		 */
+		dayOfMonth: string
+		/**
+		 * M​o​n​t​h
+		 */
+		month: string
+		/**
+		 * D​a​y​ ​o​f​ ​W​e​e​k
+		 */
+		dayOfWeek: string
+		/**
+		 * G​e​n​e​r​a​t​e
+		 */
+		generate: string
+		/**
+		 * E​x​p​l​a​i​n
+		 */
+		explain: string
+		/**
+		 * C​o​p​y
+		 */
+		copy: string
+		/**
+		 * C​o​p​i​e​d​ ​t​o​ ​c​l​i​p​b​o​a​r​d
+		 */
+		copySuccess: string
+		/**
+		 * I​n​v​a​l​i​d​ ​c​r​o​n​ ​e​x​p​r​e​s​s​i​o​n
+		 */
+		invalidExpression: string
+		/**
+		 * E​v​e​r​y​ ​M​i​n​u​t​e
+		 */
+		everyMinute: string
+		/**
+		 * E​v​e​r​y​ ​H​o​u​r
+		 */
+		everyHour: string
+		/**
+		 * E​v​e​r​y​ ​D​a​y
+		 */
+		everyDay: string
+		/**
+		 * E​v​e​r​y​ ​W​e​e​k
+		 */
+		everyWeek: string
+		/**
+		 * E​v​e​r​y​ ​M​o​n​t​h
+		 */
+		everyMonth: string
+		/**
+		 * B​u​i​l​d​e​r
+		 */
+		builder: string
+		/**
+		 * H​e​l​p
+		 */
+		help: string
+		/**
+		 * A​n​y​ ​v​a​l​u​e
+		 */
+		helpAny: string
+		/**
+		 * E​v​e​r​y​ ​N​ ​u​n​i​t​s
+		 */
+		helpEvery: string
+		/**
+		 * R​a​n​g​e​ ​o​f​ ​v​a​l​u​e​s
+		 */
+		helpRange: string
+		/**
+		 * L​i​s​t​ ​o​f​ ​v​a​l​u​e​s
+		 */
+		helpList: string
+	}
+	qrCode: {
+		/**
+		 * Q​R​ ​C​o​d​e​ ​G​e​n​e​r​a​t​o​r
+		 */
+		title: string
+		/**
+		 * G​e​n​e​r​a​t​e​ ​Q​R​ ​c​o​d​e​s​ ​f​r​o​m​ ​t​e​x​t​ ​o​r​ ​U​R​L​s
+		 */
+		description: string
+		/**
+		 * I​n​p​u​t
+		 */
+		input: string
+		/**
+		 * E​n​t​e​r​ ​t​e​x​t​ ​o​r​ ​U​R​L​.​.​.
+		 */
+		inputPlaceholder: string
+		/**
+		 * T​e​x​t
+		 */
+		text: string
+		/**
+		 * E​n​t​e​r​ ​t​e​x​t​ ​o​r​ ​U​R​L​ ​t​o​ ​g​e​n​e​r​a​t​e​ ​Q​R​ ​c​o​d​e​.​.​.
+		 */
+		textPlaceholder: string
+		/**
+		 * S​i​z​e
+		 */
+		size: string
+		/**
+		 * G​e​n​e​r​a​t​e
+		 */
+		generate: string
+		/**
+		 * D​o​w​n​l​o​a​d
+		 */
+		download: string
+		/**
+		 * C​o​p​y​ ​L​i​n​k
+		 */
+		copy: string
+		/**
+		 * C​o​p​i​e​d​ ​t​o​ ​c​l​i​p​b​o​a​r​d
+		 */
+		copySuccess: string
+		/**
+		 * C​l​e​a​r
+		 */
+		clear: string
+		/**
+		 * E​r​r​o​r​ ​C​o​r​r​e​c​t​i​o​n
+		 */
+		errorCorrection: string
+		/**
+		 * L​o​w
+		 */
+		low: string
+		/**
+		 * M​e​d​i​u​m
+		 */
+		medium: string
+		/**
+		 * Q​u​a​r​t​i​l​e
+		 */
+		quartile: string
+		/**
+		 * H​i​g​h
+		 */
+		high: string
+		/**
+		 * L​o​w​ ​(​~​7​%​)
+		 */
+		errorLevelL: string
+		/**
+		 * M​e​d​i​u​m​ ​(​~​1​5​%​)
+		 */
+		errorLevelM: string
+		/**
+		 * Q​u​a​r​t​i​l​e​ ​(​~​2​5​%​)
+		 */
+		errorLevelQ: string
+		/**
+		 * H​i​g​h​ ​(​~​3​0​%​)
+		 */
+		errorLevelH: string
+		/**
+		 * S​e​t​t​i​n​g​s
+		 */
+		settings: string
+		/**
+		 * P​r​e​v​i​e​w
+		 */
+		preview: string
+		/**
+		 * E​n​t​e​r​ ​t​e​x​t​ ​t​o​ ​g​e​n​e​r​a​t​e​ ​Q​R​ ​c​o​d​e
+		 */
+		noQRCode: string
+		/**
+		 * Q​R​ ​c​o​d​e​ ​d​o​w​n​l​o​a​d​e​d
+		 */
+		downloadSuccess: string
+	}
 }
 
 export type TranslationFunctions = {
@@ -456,6 +1326,18 @@ export type TranslationFunctions = {
 		 */
 		jsonEditor: () => LocalizedString
 		/**
+		 * UUID Generator
+		 */
+		uuid: () => LocalizedString
+		/**
+		 * String Case
+		 */
+		stringCase: () => LocalizedString
+		/**
+		 * Color Converter
+		 */
+		color: () => LocalizedString
+		/**
 		 * Encode/Decode
 		 */
 		encodeDecode: () => LocalizedString
@@ -464,9 +1346,37 @@ export type TranslationFunctions = {
 		 */
 		hash: () => LocalizedString
 		/**
-		 * Timestamp Converter
+		 * JWT Decoder
+		 */
+		jwt: () => LocalizedString
+		/**
+		 * Regex Tester
+		 */
+		regex: () => LocalizedString
+		/**
+		 * Diff Checker
+		 */
+		diff: () => LocalizedString
+		/**
+		 * SQL Formatter
+		 */
+		sql: () => LocalizedString
+		/**
+		 * Timestamp
 		 */
 		timestamp: () => LocalizedString
+		/**
+		 * YAML/JSON
+		 */
+		yamlJson: () => LocalizedString
+		/**
+		 * Cron Expression
+		 */
+		cron: () => LocalizedString
+		/**
+		 * QR Code
+		 */
+		qrCode: () => LocalizedString
 	}
 	header: {
 		/**
@@ -881,6 +1791,834 @@ export type TranslationFunctions = {
 		 * Unit
 		 */
 		unit: () => LocalizedString
+	}
+	uuid: {
+		/**
+		 * UUID Generator
+		 */
+		title: () => LocalizedString
+		/**
+		 * Generate universally unique identifiers
+		 */
+		description: () => LocalizedString
+		/**
+		 * Generate
+		 */
+		generate: () => LocalizedString
+		/**
+		 * Generate Bulk
+		 */
+		generateBulk: () => LocalizedString
+		/**
+		 * Copy
+		 */
+		copy: () => LocalizedString
+		/**
+		 * Copied to clipboard
+		 */
+		copySuccess: () => LocalizedString
+		/**
+		 * Clear
+		 */
+		clear: () => LocalizedString
+		/**
+		 * Version
+		 */
+		version: () => LocalizedString
+		/**
+		 * Version 1 (Timestamp)
+		 */
+		v1: () => LocalizedString
+		/**
+		 * Version 4 (Random)
+		 */
+		v4: () => LocalizedString
+		/**
+		 * Count
+		 */
+		count: () => LocalizedString
+		/**
+		 * Uppercase
+		 */
+		uppercase: () => LocalizedString
+		/**
+		 * Include Hyphens
+		 */
+		hyphens: () => LocalizedString
+		/**
+		 * Result
+		 */
+		result: () => LocalizedString
+	}
+	stringCase: {
+		/**
+		 * String Case Converter
+		 */
+		title: () => LocalizedString
+		/**
+		 * Convert text between different naming conventions
+		 */
+		description: () => LocalizedString
+		/**
+		 * Input
+		 */
+		input: () => LocalizedString
+		/**
+		 * Enter text to convert...
+		 */
+		inputPlaceholder: () => LocalizedString
+		/**
+		 * camelCase
+		 */
+		camelCase: () => LocalizedString
+		/**
+		 * PascalCase
+		 */
+		pascalCase: () => LocalizedString
+		/**
+		 * snake_case
+		 */
+		snakeCase: () => LocalizedString
+		/**
+		 * kebab-case
+		 */
+		kebabCase: () => LocalizedString
+		/**
+		 * SCREAMING_SNAKE_CASE
+		 */
+		screamingSnakeCase: () => LocalizedString
+		/**
+		 * dot.case
+		 */
+		dotCase: () => LocalizedString
+		/**
+		 * path/case
+		 */
+		pathCase: () => LocalizedString
+		/**
+		 * Copy
+		 */
+		copy: () => LocalizedString
+		/**
+		 * Copied to clipboard
+		 */
+		copySuccess: () => LocalizedString
+	}
+	color: {
+		/**
+		 * Color Converter
+		 */
+		title: () => LocalizedString
+		/**
+		 * Convert colors between different formats
+		 */
+		description: () => LocalizedString
+		/**
+		 * HEX
+		 */
+		hex: () => LocalizedString
+		/**
+		 * RGB
+		 */
+		rgb: () => LocalizedString
+		/**
+		 * HSL
+		 */
+		hsl: () => LocalizedString
+		/**
+		 * Android XML
+		 */
+		android: () => LocalizedString
+		/**
+		 * #FF5733
+		 */
+		hexPlaceholder: () => LocalizedString
+		/**
+		 * Preview
+		 */
+		preview: () => LocalizedString
+		/**
+		 * Copy
+		 */
+		copy: () => LocalizedString
+		/**
+		 * Copied to clipboard
+		 */
+		copySuccess: () => LocalizedString
+		/**
+		 * Invalid color format
+		 */
+		invalidColor: () => LocalizedString
+	}
+	jwt: {
+		/**
+		 * JWT Decoder
+		 */
+		title: () => LocalizedString
+		/**
+		 * Decode and inspect JSON Web Tokens
+		 */
+		description: () => LocalizedString
+		/**
+		 * JWT Token
+		 */
+		token: () => LocalizedString
+		/**
+		 * Paste your JWT token here...
+		 */
+		tokenPlaceholder: () => LocalizedString
+		/**
+		 * Input
+		 */
+		input: () => LocalizedString
+		/**
+		 * Decode
+		 */
+		decode: () => LocalizedString
+		/**
+		 * Header
+		 */
+		header: () => LocalizedString
+		/**
+		 * Payload
+		 */
+		payload: () => LocalizedString
+		/**
+		 * Signature
+		 */
+		signature: () => LocalizedString
+		/**
+		 * Claims
+		 */
+		claims: () => LocalizedString
+		/**
+		 * Algorithm
+		 */
+		algorithm: () => LocalizedString
+		/**
+		 * Type
+		 */
+		type: () => LocalizedString
+		/**
+		 * Issuer
+		 */
+		issuer: () => LocalizedString
+		/**
+		 * Subject
+		 */
+		subject: () => LocalizedString
+		/**
+		 * Audience
+		 */
+		audience: () => LocalizedString
+		/**
+		 * Expiration
+		 */
+		expiration: () => LocalizedString
+		/**
+		 * Issued At
+		 */
+		issuedAt: () => LocalizedString
+		/**
+		 * Expires At
+		 */
+		expiresAt: () => LocalizedString
+		/**
+		 * Not Before
+		 */
+		notBefore: () => LocalizedString
+		/**
+		 * JWT ID
+		 */
+		jwtId: () => LocalizedString
+		/**
+		 * Expired
+		 */
+		expired: () => LocalizedString
+		/**
+		 * Token Not Yet Valid
+		 */
+		notYetValid: () => LocalizedString
+		/**
+		 * Token Valid
+		 */
+		valid: () => LocalizedString
+		/**
+		 * Copy
+		 */
+		copy: () => LocalizedString
+		/**
+		 * Copied to clipboard
+		 */
+		copySuccess: () => LocalizedString
+		/**
+		 * Invalid JWT token
+		 */
+		invalidToken: () => LocalizedString
+		/**
+		 * Clear
+		 */
+		clear: () => LocalizedString
+	}
+	regex: {
+		/**
+		 * Regex Tester
+		 */
+		title: () => LocalizedString
+		/**
+		 * Test regular expressions with real-time matching
+		 */
+		description: () => LocalizedString
+		/**
+		 * Pattern
+		 */
+		pattern: () => LocalizedString
+		/**
+		 * Enter regex pattern...
+		 */
+		patternPlaceholder: () => LocalizedString
+		/**
+		 * Flags
+		 */
+		flags: () => LocalizedString
+		/**
+		 * Test String
+		 */
+		testString: () => LocalizedString
+		/**
+		 * Enter text to test...
+		 */
+		testStringPlaceholder: () => LocalizedString
+		/**
+		 * Matches
+		 */
+		matches: () => LocalizedString
+		/**
+		 * Match
+		 */
+		match: () => LocalizedString
+		/**
+		 * Groups
+		 */
+		groups: () => LocalizedString
+		/**
+		 * No matches found
+		 */
+		noMatches: () => LocalizedString
+		/**
+		 * Invalid regular expression
+		 */
+		invalidRegex: () => LocalizedString
+		/**
+		 * {count} match(es) found
+		 */
+		matchCount: (arg: { count: unknown }) => LocalizedString
+		/**
+		 * Highlighted Text
+		 */
+		highlightedText: () => LocalizedString
+		/**
+		 * Match Details
+		 */
+		matchDetails: () => LocalizedString
+		/**
+		 * Position
+		 */
+		position: () => LocalizedString
+		/**
+		 * Capture Groups
+		 */
+		captureGroups: () => LocalizedString
+		/**
+		 * Global (g)
+		 */
+		global: () => LocalizedString
+		/**
+		 * Case Insensitive (i)
+		 */
+		caseInsensitive: () => LocalizedString
+		/**
+		 * Multiline (m)
+		 */
+		multiline: () => LocalizedString
+		/**
+		 * Dot All (s)
+		 */
+		dotAll: () => LocalizedString
+		/**
+		 * Unicode (u)
+		 */
+		unicode: () => LocalizedString
+		/**
+		 * Sticky (y)
+		 */
+		sticky: () => LocalizedString
+	}
+	diff: {
+		/**
+		 * Diff Checker
+		 */
+		title: () => LocalizedString
+		/**
+		 * Compare two texts and highlight differences
+		 */
+		description: () => LocalizedString
+		/**
+		 * Original
+		 */
+		original: () => LocalizedString
+		/**
+		 * Modified
+		 */
+		modified: () => LocalizedString
+		/**
+		 * Enter original text...
+		 */
+		originalPlaceholder: () => LocalizedString
+		/**
+		 * Enter modified text...
+		 */
+		modifiedPlaceholder: () => LocalizedString
+		/**
+		 * Comparison Mode
+		 */
+		mode: () => LocalizedString
+		/**
+		 * Lines
+		 */
+		lines: () => LocalizedString
+		/**
+		 * Words
+		 */
+		words: () => LocalizedString
+		/**
+		 * Characters
+		 */
+		characters: () => LocalizedString
+		/**
+		 * Compare
+		 */
+		compare: () => LocalizedString
+		/**
+		 * Swap
+		 */
+		swap: () => LocalizedString
+		/**
+		 * Copy
+		 */
+		copy: () => LocalizedString
+		/**
+		 * Copied to clipboard
+		 */
+		copySuccess: () => LocalizedString
+		/**
+		 * Clear
+		 */
+		clear: () => LocalizedString
+		/**
+		 * Side by Side
+		 */
+		sideBySide: () => LocalizedString
+		/**
+		 * Inline
+		 */
+		inline: () => LocalizedString
+		/**
+		 * No differences found
+		 */
+		noDifferences: () => LocalizedString
+		/**
+		 * Statistics
+		 */
+		statistics: () => LocalizedString
+		/**
+		 * Additions
+		 */
+		additions: () => LocalizedString
+		/**
+		 * Deletions
+		 */
+		deletions: () => LocalizedString
+		/**
+		 * Changes
+		 */
+		changes: () => LocalizedString
+		/**
+		 * Result
+		 */
+		result: () => LocalizedString
+		/**
+		 * Added
+		 */
+		added: () => LocalizedString
+		/**
+		 * Removed
+		 */
+		removed: () => LocalizedString
+		/**
+		 * Unchanged
+		 */
+		unchanged: () => LocalizedString
+	}
+	yamlJson: {
+		/**
+		 * YAML ↔ JSON Converter
+		 */
+		title: () => LocalizedString
+		/**
+		 * Convert between YAML and JSON formats
+		 */
+		description: () => LocalizedString
+		/**
+		 * YAML
+		 */
+		yaml: () => LocalizedString
+		/**
+		 * JSON
+		 */
+		json: () => LocalizedString
+		/**
+		 * YAML to JSON
+		 */
+		yamlToJson: () => LocalizedString
+		/**
+		 * JSON to YAML
+		 */
+		jsonToYaml: () => LocalizedString
+		/**
+		 * Enter YAML...
+		 */
+		yamlPlaceholder: () => LocalizedString
+		/**
+		 * Enter JSON...
+		 */
+		jsonPlaceholder: () => LocalizedString
+		/**
+		 * Convert
+		 */
+		convert: () => LocalizedString
+		/**
+		 * Copy
+		 */
+		copy: () => LocalizedString
+		/**
+		 * Copied to clipboard
+		 */
+		copySuccess: () => LocalizedString
+		/**
+		 * Clear
+		 */
+		clear: () => LocalizedString
+		/**
+		 * Invalid YAML format
+		 */
+		invalidYaml: () => LocalizedString
+		/**
+		 * Invalid JSON format
+		 */
+		invalidJson: () => LocalizedString
+		/**
+		 * Settings
+		 */
+		settings: () => LocalizedString
+		/**
+		 * Indent Size
+		 */
+		indentSize: () => LocalizedString
+		/**
+		 * Switch Direction
+		 */
+		'switch': () => LocalizedString
+		/**
+		 * YAML Input
+		 */
+		yamlInput: () => LocalizedString
+		/**
+		 * JSON Input
+		 */
+		jsonInput: () => LocalizedString
+		/**
+		 * JSON Output
+		 */
+		jsonOutput: () => LocalizedString
+		/**
+		 * YAML Output
+		 */
+		yamlOutput: () => LocalizedString
+		/**
+		 * Output will appear here...
+		 */
+		outputPlaceholder: () => LocalizedString
+	}
+	sql: {
+		/**
+		 * SQL Formatter
+		 */
+		title: () => LocalizedString
+		/**
+		 * Format and beautify SQL queries
+		 */
+		description: () => LocalizedString
+		/**
+		 * Input
+		 */
+		input: () => LocalizedString
+		/**
+		 * Output
+		 */
+		output: () => LocalizedString
+		/**
+		 * Enter SQL query...
+		 */
+		inputPlaceholder: () => LocalizedString
+		/**
+		 * Formatted SQL will appear here...
+		 */
+		outputPlaceholder: () => LocalizedString
+		/**
+		 * Format
+		 */
+		format: () => LocalizedString
+		/**
+		 * Copy
+		 */
+		copy: () => LocalizedString
+		/**
+		 * Copied to clipboard
+		 */
+		copySuccess: () => LocalizedString
+		/**
+		 * Clear
+		 */
+		clear: () => LocalizedString
+		/**
+		 * Uppercase Keywords
+		 */
+		uppercase: () => LocalizedString
+		/**
+		 * Indent Size
+		 */
+		indentSize: () => LocalizedString
+		/**
+		 * SQL Dialect
+		 */
+		language: () => LocalizedString
+		/**
+		 * Settings
+		 */
+		settings: () => LocalizedString
+	}
+	cron: {
+		/**
+		 * Cron Expression Helper
+		 */
+		title: () => LocalizedString
+		/**
+		 * Generate and explain cron expressions
+		 */
+		description: () => LocalizedString
+		/**
+		 * Cron Expression
+		 */
+		expression: () => LocalizedString
+		/**
+		 * e.g., 0 0 * * *
+		 */
+		expressionPlaceholder: () => LocalizedString
+		/**
+		 * Description
+		 */
+		descriptionLabel: () => LocalizedString
+		/**
+		 * Next {count} Runs
+		 */
+		nextRuns: (arg: { count: unknown }) => LocalizedString
+		/**
+		 * Minute
+		 */
+		minute: () => LocalizedString
+		/**
+		 * Hour
+		 */
+		hour: () => LocalizedString
+		/**
+		 * Day of Month
+		 */
+		dayOfMonth: () => LocalizedString
+		/**
+		 * Month
+		 */
+		month: () => LocalizedString
+		/**
+		 * Day of Week
+		 */
+		dayOfWeek: () => LocalizedString
+		/**
+		 * Generate
+		 */
+		generate: () => LocalizedString
+		/**
+		 * Explain
+		 */
+		explain: () => LocalizedString
+		/**
+		 * Copy
+		 */
+		copy: () => LocalizedString
+		/**
+		 * Copied to clipboard
+		 */
+		copySuccess: () => LocalizedString
+		/**
+		 * Invalid cron expression
+		 */
+		invalidExpression: () => LocalizedString
+		/**
+		 * Every Minute
+		 */
+		everyMinute: () => LocalizedString
+		/**
+		 * Every Hour
+		 */
+		everyHour: () => LocalizedString
+		/**
+		 * Every Day
+		 */
+		everyDay: () => LocalizedString
+		/**
+		 * Every Week
+		 */
+		everyWeek: () => LocalizedString
+		/**
+		 * Every Month
+		 */
+		everyMonth: () => LocalizedString
+		/**
+		 * Builder
+		 */
+		builder: () => LocalizedString
+		/**
+		 * Help
+		 */
+		help: () => LocalizedString
+		/**
+		 * Any value
+		 */
+		helpAny: () => LocalizedString
+		/**
+		 * Every N units
+		 */
+		helpEvery: () => LocalizedString
+		/**
+		 * Range of values
+		 */
+		helpRange: () => LocalizedString
+		/**
+		 * List of values
+		 */
+		helpList: () => LocalizedString
+	}
+	qrCode: {
+		/**
+		 * QR Code Generator
+		 */
+		title: () => LocalizedString
+		/**
+		 * Generate QR codes from text or URLs
+		 */
+		description: () => LocalizedString
+		/**
+		 * Input
+		 */
+		input: () => LocalizedString
+		/**
+		 * Enter text or URL...
+		 */
+		inputPlaceholder: () => LocalizedString
+		/**
+		 * Text
+		 */
+		text: () => LocalizedString
+		/**
+		 * Enter text or URL to generate QR code...
+		 */
+		textPlaceholder: () => LocalizedString
+		/**
+		 * Size
+		 */
+		size: () => LocalizedString
+		/**
+		 * Generate
+		 */
+		generate: () => LocalizedString
+		/**
+		 * Download
+		 */
+		download: () => LocalizedString
+		/**
+		 * Copy Link
+		 */
+		copy: () => LocalizedString
+		/**
+		 * Copied to clipboard
+		 */
+		copySuccess: () => LocalizedString
+		/**
+		 * Clear
+		 */
+		clear: () => LocalizedString
+		/**
+		 * Error Correction
+		 */
+		errorCorrection: () => LocalizedString
+		/**
+		 * Low
+		 */
+		low: () => LocalizedString
+		/**
+		 * Medium
+		 */
+		medium: () => LocalizedString
+		/**
+		 * Quartile
+		 */
+		quartile: () => LocalizedString
+		/**
+		 * High
+		 */
+		high: () => LocalizedString
+		/**
+		 * Low (~7%)
+		 */
+		errorLevelL: () => LocalizedString
+		/**
+		 * Medium (~15%)
+		 */
+		errorLevelM: () => LocalizedString
+		/**
+		 * Quartile (~25%)
+		 */
+		errorLevelQ: () => LocalizedString
+		/**
+		 * High (~30%)
+		 */
+		errorLevelH: () => LocalizedString
+		/**
+		 * Settings
+		 */
+		settings: () => LocalizedString
+		/**
+		 * Preview
+		 */
+		preview: () => LocalizedString
+		/**
+		 * Enter text to generate QR code
+		 */
+		noQRCode: () => LocalizedString
+		/**
+		 * QR code downloaded
+		 */
+		downloadSuccess: () => LocalizedString
 	}
 }
 

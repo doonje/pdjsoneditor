@@ -1,7 +1,24 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { LL } from '$i18n/i18n-svelte';
-	import { FileJson, Hash, Clock, Code2, Moon, Sun } from 'lucide-svelte';
+	import {
+		FileJson,
+		Hash,
+		Clock,
+		Code2,
+		Moon,
+		Sun,
+		Fingerprint,
+		CaseSensitive,
+		Palette,
+		Key,
+		Search,
+		GitCompare,
+		QrCode,
+		FileCode,
+		Database,
+		CalendarClock
+	} from 'lucide-svelte';
 	import { cn } from '$lib/utils';
 	import { mode, toggleMode } from 'mode-watcher';
 	import { Button } from '$lib/components/ui/button';
@@ -20,6 +37,21 @@
 			labelKey: 'jsonEditor'
 		},
 		{
+			href: '/uuid',
+			icon: Fingerprint,
+			labelKey: 'uuid'
+		},
+		{
+			href: '/string-case',
+			icon: CaseSensitive,
+			labelKey: 'stringCase'
+		},
+		{
+			href: '/color',
+			icon: Palette,
+			labelKey: 'color'
+		},
+		{
 			href: '/encode-decode',
 			icon: Code2,
 			labelKey: 'encodeDecode'
@@ -30,9 +62,44 @@
 			labelKey: 'hash'
 		},
 		{
+			href: '/jwt',
+			icon: Key,
+			labelKey: 'jwt'
+		},
+		{
+			href: '/regex',
+			icon: Search,
+			labelKey: 'regex'
+		},
+		{
+			href: '/diff',
+			icon: GitCompare,
+			labelKey: 'diff'
+		},
+		{
 			href: '/timestamp',
 			icon: Clock,
 			labelKey: 'timestamp'
+		},
+		{
+			href: '/yaml-json',
+			icon: FileCode,
+			labelKey: 'yamlJson'
+		},
+		{
+			href: '/sql',
+			icon: Database,
+			labelKey: 'sql'
+		},
+		{
+			href: '/cron',
+			icon: CalendarClock,
+			labelKey: 'cron'
+		},
+		{
+			href: '/qr-code',
+			icon: QrCode,
+			labelKey: 'qrCode'
 		}
 	];
 
