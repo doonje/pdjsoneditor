@@ -135,6 +135,7 @@
 
 	function handleDragStart(e: DragEvent, index: number) {
 		if (!isReorderMode) return;
+		console.log('[Sidebar] Drag start:', index);
 		// preventDefault()를 호출하면 드래그가 시작되지 않음 - 제거해야 함
 		e.stopPropagation();
 		draggedIndex = index;
@@ -154,10 +155,12 @@
 
 	function handleDrop(e: DragEvent, dropIndex: number) {
 		if (!isReorderMode || draggedIndex === null) return;
+		console.log('[Sidebar] Drop:', draggedIndex, '→', dropIndex);
 		e.preventDefault(); // 기본 동작 차단을 위해 필수
 		e.stopPropagation();
 
 		if (draggedIndex !== dropIndex) {
+			console.log('[Sidebar] Moving item from', draggedIndex, 'to', dropIndex);
 			menuOrderStore.moveItem(draggedIndex, dropIndex);
 		}
 
@@ -166,6 +169,7 @@
 
 	function handleDragEnd(e: DragEvent) {
 		// dragend는 정리 작업만 하므로 preventDefault 불필요
+		console.log('[Sidebar] Drag end');
 		e.stopPropagation();
 		draggedIndex = null;
 	}
@@ -191,7 +195,10 @@
 			<Button
 				variant="ghost"
 				size="icon"
-				onclick={() => (isReorderMode = !isReorderMode)}
+				onclick={() => {
+					isReorderMode = !isReorderMode;
+					console.log('[Sidebar] Reorder mode:', isReorderMode);
+				}}
 				class={cn('h-8 w-8', isReorderMode && 'bg-accent')}
 				title={isReorderMode ? '순서 변경 종료' : '메뉴 순서 변경'}
 			>
