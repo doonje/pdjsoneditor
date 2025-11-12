@@ -71,6 +71,14 @@ type RootTranslation = {
 		 * Q​R​ ​C​o​d​e
 		 */
 		qrCode: string
+		/**
+		 * E​d​i​t​o​r
+		 */
+		editor: string
+		/**
+		 * G​r​a​p​h
+		 */
+		graph: string
 	}
 	header: {
 		/**
@@ -1377,6 +1385,14 @@ export type TranslationFunctions = {
 		 * QR Code
 		 */
 		qrCode: () => LocalizedString
+		/**
+		 * Editor
+		 */
+		editor: () => LocalizedString
+		/**
+		 * Graph
+		 */
+		graph: () => LocalizedString
 	}
 	header: {
 		/**
