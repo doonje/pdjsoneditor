@@ -197,6 +197,8 @@
 			{#each menuItems as item, index}
 				{@const Icon = item.icon}
 				<div
+					role={isReorderMode ? 'button' : undefined}
+					tabindex={isReorderMode ? 0 : undefined}
 					draggable={isReorderMode}
 					ondragstart={(e) => handleDragStart(e, index)}
 					ondragover={handleDragOver}
