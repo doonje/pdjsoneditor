@@ -266,22 +266,28 @@
 					width: '100%',
 					maxWidth: '100%',
 					display: 'flex',
-					flexDirection: 'column'
+					flexDirection: 'column',
+					overflow: 'hidden'
 				},
 				'.cm-scroller': {
 					overflow: 'auto',
 					flex: '1',
 					minHeight: '0',
+					width: '100%',
 					maxWidth: '100%'
 				},
 				'.cm-content': {
 					fontSize: '14px',
 					lineHeight: '1.6',
 					minHeight: '100%',
-					maxWidth: '100%'
+					width: 'max-content',
+					minWidth: '100%'
 				},
 				'.cm-gutters': {
 					minHeight: '100%'
+				},
+				'.cm-line': {
+					width: 'max-content'
 				}
 			})
 		];
@@ -360,5 +366,5 @@
 <div
 	bind:this={editorElement}
 	class="{className} overflow-hidden w-full max-w-full"
-	style="display: flex; flex-direction: column;"
+	style="display: flex; flex-direction: column; overflow-x: hidden;"
 ></div>
