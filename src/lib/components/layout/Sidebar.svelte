@@ -240,18 +240,6 @@
 		<!-- Header -->
 		<div class="flex h-16 items-center justify-between border-b px-6">
 			<h1 class="text-xl font-bold">Dev Utils</h1>
-			<Button
-				variant="ghost"
-				size="icon"
-				onclick={() => {
-					isReorderMode = !isReorderMode;
-					console.log('[Sidebar] Reorder mode:', isReorderMode);
-				}}
-				class={cn('h-8 w-8', isReorderMode && 'bg-accent')}
-				title={isReorderMode ? '순서 변경 종료' : '메뉴 순서 변경'}
-			>
-				<GripVertical class="h-4 w-4" />
-			</Button>
 		</div>
 
 		<!-- Navigation -->
@@ -314,14 +302,28 @@
 			{/if}
 			<div class="flex items-center justify-between gap-2">
 				<LanguageSwitcher />
-				<Button variant="ghost" size="icon" onclick={toggleMode}>
-					{#if mode.current === 'dark'}
-						<Sun class="h-5 w-5" />
-					{:else}
-						<Moon class="h-5 w-5" />
-					{/if}
-					<span class="sr-only">Toggle theme</span>
-				</Button>
+				<div class="flex items-center gap-2">
+					<Button
+						variant="ghost"
+						size="icon"
+						onclick={() => {
+							isReorderMode = !isReorderMode;
+							console.log('[Sidebar] Reorder mode:', isReorderMode);
+						}}
+						class={cn('h-8 w-8', isReorderMode && 'bg-accent')}
+						title={isReorderMode ? '순서 변경 종료' : '메뉴 순서 변경'}
+					>
+						<GripVertical class="h-5 w-5" />
+					</Button>
+					<Button variant="ghost" size="icon" onclick={toggleMode}>
+						{#if mode.current === 'dark'}
+							<Sun class="h-5 w-5" />
+						{:else}
+							<Moon class="h-5 w-5" />
+						{/if}
+						<span class="sr-only">Toggle theme</span>
+					</Button>
+				</div>
 			</div>
 		</div>
 	</div>
