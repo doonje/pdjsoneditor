@@ -135,7 +135,7 @@
 
 	function handleDragStart(e: DragEvent, index: number) {
 		if (!isReorderMode) return;
-		e.preventDefault();
+		// preventDefault()를 호출하면 드래그가 시작되지 않음 - 제거해야 함
 		e.stopPropagation();
 		draggedIndex = index;
 		if (e.dataTransfer) {
@@ -145,7 +145,7 @@
 
 	function handleDragOver(e: DragEvent) {
 		if (!isReorderMode) return;
-		e.preventDefault();
+		e.preventDefault(); // drop을 허용하기 위해 필수
 		e.stopPropagation();
 		if (e.dataTransfer) {
 			e.dataTransfer.dropEffect = 'move';
@@ -154,7 +154,7 @@
 
 	function handleDrop(e: DragEvent, dropIndex: number) {
 		if (!isReorderMode || draggedIndex === null) return;
-		e.preventDefault();
+		e.preventDefault(); // 기본 동작 차단을 위해 필수
 		e.stopPropagation();
 
 		if (draggedIndex !== dropIndex) {
@@ -165,7 +165,7 @@
 	}
 
 	function handleDragEnd(e: DragEvent) {
-		e.preventDefault();
+		// dragend는 정리 작업만 하므로 preventDefault 불필요
 		e.stopPropagation();
 		draggedIndex = null;
 	}
