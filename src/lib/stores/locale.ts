@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 import type { Locales } from '$i18n/i18n-types';
 
-// Get saved locale from localStorage or default to 'en'
+// Get saved locale from localStorage or default to 'ko'
 const getInitialLocale = (): Locales => {
 	if (typeof window !== 'undefined') {
 		const saved = localStorage.getItem('locale');
@@ -9,7 +9,7 @@ const getInitialLocale = (): Locales => {
 			return saved as Locales;
 		}
 	}
-	return 'en';
+	return 'ko';
 };
 
 export const locale = writable<Locales>(getInitialLocale());
