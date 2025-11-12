@@ -1,6 +1,12 @@
 import type { BaseTranslation } from '../i18n-types';
 
 const en: BaseTranslation = {
+	navigation: {
+		jsonEditor: 'JSON Editor',
+		encodeDecode: 'Encode/Decode',
+		hash: 'Hash Generator',
+		timestamp: 'Timestamp Converter'
+	},
 	header: {
 		title: 'JSON Editor',
 		clear: 'Clear',
@@ -63,6 +69,61 @@ const en: BaseTranslation = {
 		importJsonFile: 'Import JSON File',
 		newTab: 'New Tab',
 		import: 'Import'
+	},
+	encodeDecode: {
+		title: 'Encode/Decode',
+		description: 'Encode or decode text using various encoding methods',
+		input: 'Input',
+		output: 'Output',
+		inputPlaceholder: 'Enter text to encode or decode...',
+		base64: 'Base64',
+		base64Encode: 'Base64 Encode',
+		base64Decode: 'Base64 Decode',
+		url: 'URL',
+		urlEncode: 'URL Encode',
+		urlDecode: 'URL Decode',
+		encode: 'Encode',
+		decode: 'Decode',
+		clear: 'Clear',
+		copy: 'Copy',
+		copySuccess: 'Copied to clipboard',
+		decodeError: 'Failed to decode. Please check your input.',
+		encodeError: 'Failed to encode. Please check your input.'
+	},
+	hash: {
+		title: 'Hash Generator',
+		description: 'Generate hash values using various algorithms',
+		input: 'Input',
+		inputPlaceholder: 'Enter text to generate hash...',
+		md5: 'MD5',
+		sha1: 'SHA-1',
+		sha256: 'SHA-256',
+		sha512: 'SHA-512',
+		generate: 'Generate',
+		clear: 'Clear',
+		copy: 'Copy',
+		copySuccess: 'Copied to clipboard',
+		result: 'Result',
+		algorithm: 'Algorithm'
+	},
+	timestamp: {
+		title: 'Timestamp Converter',
+		description: 'Convert between timestamp and date',
+		timestampToDate: 'Timestamp to Date',
+		dateToTimestamp: 'Date to Timestamp',
+		timestamp: 'Timestamp',
+		timestampPlaceholder: 'Enter timestamp (e.g., 1234567890)',
+		date: 'Date',
+		currentTimestamp: 'Current Timestamp',
+		convert: 'Convert',
+		clear: 'Clear',
+		copy: 'Copy',
+		copySuccess: 'Copied to clipboard',
+		invalidTimestamp: 'Invalid timestamp',
+		invalidDate: 'Invalid date',
+		milliseconds: 'Milliseconds',
+		seconds: 'Seconds',
+		unit: 'Unit'
 	}
 } satisfies BaseTranslation;
 

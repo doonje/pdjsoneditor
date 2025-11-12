@@ -69,6 +69,7 @@
 		"clsx": "^2.1.1",
 		"codemirror": "^6.0.2",
 		"dagre": "^0.8.5",
+		"js-md5": "^0.8.3",
 		"lucide-svelte": "^0.536.0",
 		"mode-watcher": "^1.1.0",
 		"tailwind-merge": "^3.3.1",
