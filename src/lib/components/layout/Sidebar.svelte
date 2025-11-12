@@ -25,12 +25,13 @@
 	import { mode, toggleMode } from 'mode-watcher';
 	import { Button } from '$lib/components/ui/button';
 	import LanguageSwitcher from '$lib/components/LanguageSwitcher.svelte';
-	import { menuOrderStore, defaultMenuOrder } from '$lib/stores/menuOrder';
+	import { menuOrderStore } from '$lib/stores/menuOrder';
 	import { onMount } from 'svelte';
+	import type { ComponentType } from 'svelte';
 
 	interface MenuItem {
 		href: string;
-		icon: any;
+		icon: ComponentType;
 		labelKey: keyof typeof $LL.navigation;
 	}
 

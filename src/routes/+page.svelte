@@ -67,7 +67,9 @@
 	let urlInputLocal = $state<string>('');
 
 	// Get current tab's request settings (derived)
-	let httpMethod = $derived(tabsStore.getActiveTab()?.requestSettings?.method || 'GET');
+	let httpMethod = $derived(
+		(tabsStore.getActiveTab()?.requestSettings?.method || 'GET') as HttpMethod
+	);
 	let customHeaders = $derived(tabsStore.getActiveTab()?.requestSettings?.headers || []);
 	let customBody = $derived(tabsStore.getActiveTab()?.requestSettings?.body || '');
 	let sendAsRawText = $derived(tabsStore.getActiveTab()?.requestSettings?.sendAsRawText || false);
