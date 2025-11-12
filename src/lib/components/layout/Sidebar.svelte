@@ -135,6 +135,8 @@
 
 	function handleDragStart(e: DragEvent, index: number) {
 		if (!isReorderMode) return;
+		e.preventDefault();
+		e.stopPropagation();
 		draggedIndex = index;
 		if (e.dataTransfer) {
 			e.dataTransfer.effectAllowed = 'move';
@@ -144,6 +146,7 @@
 	function handleDragOver(e: DragEvent) {
 		if (!isReorderMode) return;
 		e.preventDefault();
+		e.stopPropagation();
 		if (e.dataTransfer) {
 			e.dataTransfer.dropEffect = 'move';
 		}
@@ -152,6 +155,7 @@
 	function handleDrop(e: DragEvent, dropIndex: number) {
 		if (!isReorderMode || draggedIndex === null) return;
 		e.preventDefault();
+		e.stopPropagation();
 
 		if (draggedIndex !== dropIndex) {
 			menuOrderStore.moveItem(draggedIndex, dropIndex);
@@ -160,7 +164,9 @@
 		draggedIndex = null;
 	}
 
-	function handleDragEnd() {
+	function handleDragEnd(e: DragEvent) {
+		e.preventDefault();
+		e.stopPropagation();
 		draggedIndex = null;
 	}
 
