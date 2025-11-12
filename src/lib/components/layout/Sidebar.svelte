@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { LL } from '$i18n/i18n-svelte';
-	import { FileJson, Hash, Clock, Code2 } from 'lucide-svelte';
+	import { FileJson, Hash, Clock, Code2, Moon, Sun } from 'lucide-svelte';
 	import { cn } from '$lib/utils';
+	import { mode, toggleMode } from 'mode-watcher';
+	import { Button } from '$lib/components/ui/button';
+	import LanguageSwitcher from '$lib/components/LanguageSwitcher.svelte';
 
 	interface MenuItem {
 		href: string;
@@ -79,6 +82,21 @@
 				</a>
 			{/each}
 		</nav>
+
+		<!-- Footer -->
+		<div class="border-t p-4">
+			<div class="flex items-center justify-between gap-2">
+				<LanguageSwitcher />
+				<Button variant="ghost" size="icon" onclick={toggleMode}>
+					{#if mode.current === 'dark'}
+						<Sun class="h-5 w-5" />
+					{:else}
+						<Moon class="h-5 w-5" />
+					{/if}
+					<span class="sr-only">Toggle theme</span>
+				</Button>
+			</div>
+		</div>
 	</div>
 </aside>
 
