@@ -113,6 +113,8 @@
 	let menuItems = $state<MenuItem[]>([]);
 	let draggedIndex = $state<number | null>(null);
 	let isReorderMode = $state(false);
+	let touchStartY = $state<number>(0);
+	let currentTouchIndex = $state<number | null>(null);
 
 	// Subscribe to menu order store
 	onMount(() => {
@@ -179,6 +181,52 @@
 			menuOrderStore.reset();
 		}
 	}
+
+	// Touch event handlers for mobile
+	function handleTouchStart(e: TouchEvent, index: number) {
+		if (!isReorderMode) return;
+		console.log('[Sidebar] Touch start:', index);
+		e.stopPropagation();
+		draggedIndex = index;
+		currentTouchIndex = index;
+		touchStartY = e.touches[0].clientY;
+	}
+
+	function handleTouchMove(e: TouchEvent) {
+		if (!isReorderMode || draggedIndex === null) return;
+		e.preventDefault();
+		e.stopPropagation();
+
+		const touch = e.touches[0];
+		const currentY = touch.clientY;
+		const deltaY = currentY - touchStartY;
+
+		// 메뉴 아이템 높이 (대략 48px)
+		const itemHeight = 48;
+		const movedItems = Math.round(deltaY / itemHeight);
+
+		if (movedItems !== 0) {
+			const newIndex = Math.max(0, Math.min(menuItems.length - 1, draggedIndex + movedItems));
+			if (newIndex !== currentTouchIndex) {
+				console.log('[Sidebar] Touch move:', currentTouchIndex, '→', newIndex);
+				currentTouchIndex = newIndex;
+			}
+		}
+	}
+
+	function handleTouchEnd(e: TouchEvent) {
+		if (!isReorderMode || draggedIndex === null || currentTouchIndex === null) return;
+		console.log('[Sidebar] Touch end:', draggedIndex, '→', currentTouchIndex);
+		e.stopPropagation();
+
+		if (draggedIndex !== currentTouchIndex) {
+			console.log('[Sidebar] Moving item from', draggedIndex, 'to', currentTouchIndex);
+			menuOrderStore.moveItem(draggedIndex, currentTouchIndex);
+		}
+
+		draggedIndex = null;
+		currentTouchIndex = null;
+	}
 </script>
 
 <!-- Desktop Sidebar -->
@@ -220,6 +268,9 @@
 						ondragover={handleDragOver}
 						ondrop={(e) => handleDrop(e, index)}
 						ondragend={handleDragEnd}
+						ontouchstart={(e) => handleTouchStart(e, index)}
+						ontouchmove={handleTouchMove}
+						ontouchend={handleTouchEnd}
 						class={cn(
 							'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-opacity cursor-move',
 							'text-muted-foreground hover:bg-accent',
