@@ -263,18 +263,22 @@
 			EditorView.theme({
 				'&': {
 					height: '100%',
+					width: '100%',
+					maxWidth: '100%',
 					display: 'flex',
 					flexDirection: 'column'
 				},
 				'.cm-scroller': {
 					overflow: 'auto',
 					flex: '1',
-					minHeight: '0'
+					minHeight: '0',
+					maxWidth: '100%'
 				},
 				'.cm-content': {
 					fontSize: '14px',
 					lineHeight: '1.6',
-					minHeight: '100%'
+					minHeight: '100%',
+					maxWidth: '100%'
 				},
 				'.cm-gutters': {
 					minHeight: '100%'
@@ -355,6 +359,6 @@
 
 <div
 	bind:this={editorElement}
-	class="{className} overflow-hidden"
+	class="{className} overflow-hidden w-full max-w-full"
 	style="display: flex; flex-direction: column;"
 ></div>

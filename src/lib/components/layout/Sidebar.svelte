@@ -196,28 +196,35 @@
 		<nav class="flex-1 space-y-1 overflow-y-auto p-4">
 			{#each menuItems as item, index}
 				{@const Icon = item.icon}
-				<div
-					role={isReorderMode ? 'button' : undefined}
-					tabindex={isReorderMode ? 0 : undefined}
-					draggable={isReorderMode}
-					ondragstart={(e) => handleDragStart(e, index)}
-					ondragover={handleDragOver}
-					ondrop={(e) => handleDrop(e, index)}
-					ondragend={handleDragEnd}
-					class={cn(
-						'transition-opacity',
-						isReorderMode && 'cursor-move',
-						draggedIndex === index && 'opacity-50'
-					)}
-				>
+				{#if isReorderMode}
+					<!-- Reorder Mode: Draggable div -->
+					<div
+						role="button"
+						tabindex={0}
+						draggable={true}
+						ondragstart={(e) => handleDragStart(e, index)}
+						ondragover={handleDragOver}
+						ondrop={(e) => handleDrop(e, index)}
+						ondragend={handleDragEnd}
+						class={cn(
+							'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-opacity cursor-move',
+							'text-muted-foreground hover:bg-accent',
+							draggedIndex === index && 'opacity-50',
+							'select-none'
+						)}
+					>
+						<GripVertical class="h-5 w-5 text-muted-foreground" />
+						<span>{$LL.navigation[item.labelKey]()}</span>
+					</div>
+				{:else}
+					<!-- Normal Mode: Clickable link -->
 					<a
 						href={item.href}
 						class={cn(
 							'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
 							isActive(item.href)
 								? 'bg-primary text-primary-foreground'
-								: 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
-							isReorderMode && 'pointer-events-none'
+								: 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
 						)}
 						onclick={() => {
 							if (window.innerWidth < 1024) {
@@ -225,14 +232,10 @@
 							}
 						}}
 					>
-						{#if isReorderMode}
-							<GripVertical class="h-5 w-5 text-muted-foreground" />
-						{:else}
-							<Icon class="h-5 w-5" />
-						{/if}
+						<Icon class="h-5 w-5" />
 						<span>{$LL.navigation[item.labelKey]()}</span>
 					</a>
-				</div>
+				{/if}
 			{/each}
 		</nav>
 

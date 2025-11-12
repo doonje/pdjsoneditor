@@ -412,9 +412,9 @@
 	});
 </script>
 
-<div class="h-screen flex flex-col bg-background">
+<div class="h-full flex flex-col bg-background">
 	<!-- Header -->
-	<header class="h-12 border-b bg-card flex items-center px-4">
+	<header class="h-12 border-b bg-card flex items-center px-4 flex-shrink-0">
 		<h1 class="text-base font-semibold">{$LL.header.title()}</h1>
 		<div class="ml-auto flex items-center gap-2">
 			<LanguageSwitcher />
@@ -429,17 +429,19 @@
 	</header>
 
 	<!-- Tab Bar -->
-	<TabBar />
+	<div class="flex-shrink-0">
+		<TabBar />
+	</div>
 
 	{#if isMobile}
 		<!-- Mobile Layout: Tabs for Editor/Graph -->
-		<Tabs.Root bind:value={mobileView} class="flex-1 flex flex-col overflow-hidden">
-			<Tabs.List class="grid w-full grid-cols-2 h-10 px-2">
+		<Tabs.Root bind:value={mobileView} class="flex-1 flex flex-col overflow-hidden min-h-0">
+			<Tabs.List class="grid w-full grid-cols-2 h-10 px-2 flex-shrink-0">
 				<Tabs.Trigger value="editor">{$LL.navigation.editor()}</Tabs.Trigger>
 				<Tabs.Trigger value="graph">{$LL.navigation.graph()}</Tabs.Trigger>
 			</Tabs.List>
-			<Tabs.Content value="editor" class="flex-1 flex flex-col overflow-hidden mt-0">
-				<div class="flex flex-col border-b bg-muted/50">
+			<Tabs.Content value="editor" class="flex-1 flex flex-col overflow-hidden mt-0 min-h-0">
+				<div class="flex flex-col border-b bg-muted/50 flex-shrink-0">
 					<EditorToolbar
 						{httpMethod}
 						bind:url={urlInputLocal}
@@ -458,16 +460,16 @@
 						onRegenerate={regenerateValues}
 					/>
 				</div>
-				<div class="flex-1 overflow-hidden">
+				<div class="flex-1 overflow-hidden min-h-0">
 					{#key tabsStore.activeTabId}
 						<JsonEditor bind:value={editorValue} bind:this={editorRef} class="h-full w-full" />
 					{/key}
 				</div>
 			</Tabs.Content>
-			<Tabs.Content value="graph" class="flex-1 overflow-hidden mt-0">
+			<Tabs.Content value="graph" class="flex-1 overflow-hidden mt-0 min-h-0">
 				{#key tabsStore.activeTabId}
 					{#if parsedJson}
-						<JsonGraph jsonData={parsedJson} jsonString={editorValue} class="h-full" />
+						<JsonGraph jsonData={parsedJson} jsonString={editorValue} class="h-full w-full" />
 					{:else}
 						<div class="h-full flex items-center justify-center text-muted-foreground">
 							{$LL.editor.placeholder()}
