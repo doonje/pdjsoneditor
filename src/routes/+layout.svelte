@@ -24,7 +24,7 @@
 		});
 
 		// Load initial locale
-		const initialLocale = (localStorage.getItem('locale') as Locales) || 'en';
+		const initialLocale = (localStorage.getItem('locale') as Locales) || 'ko';
 		locale.set(initialLocale);
 
 		return unsubscribe;

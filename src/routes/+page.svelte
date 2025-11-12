@@ -3,30 +3,14 @@
 	import JsonEditor from '$lib/components/JsonEditor.svelte';
 	import JsonGraph from '$lib/components/JsonGraph.svelte';
 	import TabBar from '$lib/components/TabBar.svelte';
+	import EditorToolbar from '$lib/components/EditorToolbar.svelte';
+	import EditorActions from '$lib/components/EditorActions.svelte';
+	import RequestSettingsDialog from '$lib/components/RequestSettingsDialog.svelte';
 	import { tabsStore } from '$lib/stores/tabs.svelte';
 	import { Button } from '$lib/components/ui/button';
-	import { Input } from '$lib/components/ui/input';
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import * as Dialog from '$lib/components/ui/dialog';
-	import { Textarea } from '$lib/components/ui/textarea';
-	import { Checkbox } from '$lib/components/ui/checkbox/index.js';
+	import * as Tabs from '$lib/components/ui/tabs';
 	import * as Resizable from '$lib/components/ui/resizable/index.js';
-	import {
-		FileCode2,
-		Minimize2,
-		Moon,
-		Sun,
-		ArrowRight,
-		Loader,
-		ChevronDown,
-		Check,
-		Settings2,
-		Plus,
-		Trash2,
-		X,
-		Copy,
-		RefreshCw
-	} from 'lucide-svelte';
+	import { Moon, Sun } from 'lucide-svelte';
 	import { mode, toggleMode } from 'mode-watcher';
 	import LanguageSwitcher from '$lib/components/LanguageSwitcher.svelte';
 	import LL from '$i18n/i18n-svelte';
@@ -36,42 +20,6 @@
 	import { requestJson, type HttpMethod } from '$lib/services/http';
 	import { logger } from '$lib/logger';
 	import { regenerateJSONValues, generateSampleJSON } from '$lib/utils/faker-generator';
-
-	// 	let jsonValue = $state(`{
-	//   "name": "John Doe",
-	//   "age": 30,
-	//   "email": "john.doe@example.com",
-	//   "isActive": true,
-	//   "address": {
-	//     "street": "123 Main St",
-	//     "city": "New York",
-	//     "country": "USA",
-	//     "zipCode": "10001"
-	//   },
-	//   "hobbies": ["reading", "coding", "gaming"],
-	//   "skills": [
-	//     {
-	//       "name": "JavaScript",
-	//       "level": "Expert"
-	//     },
-	//     {
-	//       "name": "Python",
-	//       "level": "Intermediate"
-	//     },
-	//     {
-	//       "name": "Go",
-	//       "level": "Beginner"
-	//     }
-	//   ],
-	//   "metadata": {
-	//     "createdAt": "2025-01-08T10:00:00Z",
-	//     "updatedAt": "2025-01-08T15:30:00Z",
-	//     "version": 1.0
-	//   }
-	// }`);
-
-	// Get active tab's JSON value (not used directly, kept for reference)
-	// let jsonValue = $derived(tabsStore.getActiveTab()?.jsonContent || '');
 
 	// Create a local state for the editor that syncs with the active tab
 	let editorValue = $state('');
@@ -111,7 +59,9 @@
 	let editorRef = $state<JsonEditor | null>(null);
 	let parseTimeout: ReturnType<typeof setTimeout>;
 
-	// LocalStorage keys are centralized in $lib/constants
+	// Mobile responsive state
+	let isMobile = $state(false);
+	let mobileView = $state<'editor' | 'graph'>('editor');
 
 	// Local state for URL input (for two-way binding)
 	let urlInputLocal = $state<string>('');
@@ -136,50 +86,23 @@
 	// UI state (not tab-specific)
 	let isLoading = $state<boolean>(false);
 	let isDialogOpen = $state<boolean>(false);
-	let tempHeaders = $state<Array<{ key: string; value: string }>>([]);
-	let tempBody = $state<string>('');
-	let tempSendAsRawText = $state<boolean>(false);
-	let tempUseEditorContent = $state<boolean>(false);
 	let httpStatusCode = $state<number | null>(null);
 	let responseTime = $state<number | null>(null);
-
-	const httpMethods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'] as const;
 
 	// Track in-flight request for cancellation
 	let abortController: AbortController | null = null;
 
-	function openSettingsDialog() {
-		// Copy current headers to temp, ensure it's a proper array
-		if (customHeaders && customHeaders.length > 0) {
-			tempHeaders = customHeaders.map((h) => ({ ...h }));
-		} else {
-			tempHeaders = [{ key: '', value: '' }];
-		}
-		tempBody = customBody || '';
-		tempSendAsRawText = sendAsRawText;
-		tempUseEditorContent = useEditorContent;
-		isDialogOpen = true;
+	function handleSettingsSave(settings: {
+		headers: Array<{ key: string; value: string }>;
+		body: string;
+		sendAsRawText: boolean;
+		useEditorContent: boolean;
+	}) {
+		tabsStore.updateActiveTabRequestSettings(settings);
 	}
 
-	function saveSettings() {
-		// Save to active tab
-		tabsStore.updateActiveTabRequestSettings({
-			headers: [...tempHeaders],
-			body: tempBody,
-			sendAsRawText: tempSendAsRawText,
-			useEditorContent: tempUseEditorContent
-		});
-
-		isDialogOpen = false;
-	}
-
-	function cancelSettings() {
-		// Reset temp
-		tempHeaders = [...customHeaders];
-		tempBody = customBody;
-		tempSendAsRawText = sendAsRawText;
-		tempUseEditorContent = useEditorContent;
-		isDialogOpen = false;
+	function handleSettingsCancel() {
+		// Nothing to do, dialog will close
 	}
 
 	function clearAllSettings() {
@@ -202,29 +125,9 @@
 			responseTime = null;
 			error = '';
 
-			// Reset temp values
-			tempHeaders = [{ key: '', value: '' }];
-			tempBody = '';
-			tempSendAsRawText = false;
-			tempUseEditorContent = false;
-
 			// Close dialog
 			isDialogOpen = false;
 		}
-	}
-
-	function addHeader() {
-		tempHeaders = [...tempHeaders, { key: '', value: '' }];
-	}
-
-	function removeHeader(index: number) {
-		tempHeaders = tempHeaders.filter((_, i) => i !== index);
-	}
-
-	function updateHeader(index: number, field: 'key' | 'value', value: string) {
-		tempHeaders = tempHeaders.map((header, i) =>
-			i === index ? { ...header, [field]: value } : header
-		);
 	}
 
 	function saveUrlAndMethod(url?: string, method?: string) {
@@ -416,23 +319,8 @@
 		}
 	}
 
-	function handleUrlKeydown(e: KeyboardEvent) {
-		if (e.key === 'Enter') {
-			fetchJsonFromUrl();
-		}
-	}
-
-	function handleUrlBlur() {
-		saveUrlAndMethod(urlInputLocal, undefined);
-	}
-
-	function handleMethodChange(newMethod: string) {
-		saveUrlAndMethod(undefined, newMethod);
-	}
-
 	$effect(() => {
 		const currentJsonValue = editorValue;
-		// console.log('[Page Effect] JSON value changed, length:', currentJsonValue.length);
 
 		// Clear previous timeout
 		if (parseTimeout) {
@@ -441,7 +329,6 @@
 
 		// Set new timeout for 500ms delay
 		parseTimeout = setTimeout(async () => {
-			// console.log('[Page Effect] Parsing JSON after timeout');
 			try {
 				// Activate graph loading overlay before parsing to improve perceived responsiveness with large inputs
 				const mod = await import('$lib/stores/graphLoading');
@@ -474,10 +361,21 @@
 	});
 
 	onMount(() => {
+		// Check if mobile
+		const checkMobile = () => {
+			isMobile = window.innerWidth < 1024;
+		};
+		checkMobile();
+		window.addEventListener('resize', checkMobile);
+
 		const handleNodeClick = (e: CustomEvent) => {
 			const path = e.detail;
 			if (path && editorRef) {
 				editorRef.navigateToPath(path);
+				// On mobile, switch to editor view when node is clicked
+				if (isMobile) {
+					mobileView = 'editor';
+				}
 			}
 		};
 
@@ -507,6 +405,7 @@
 		window.addEventListener('tabChanged', handleTabChanged as EventListener);
 
 		return () => {
+			window.removeEventListener('resize', checkMobile);
 			window.removeEventListener('nodeClick', handleNodeClick as EventListener);
 			window.removeEventListener('tabChanged', handleTabChanged as EventListener);
 		};
@@ -532,142 +431,102 @@
 	<!-- Tab Bar -->
 	<TabBar />
 
-	<Resizable.PaneGroup direction="horizontal" class="flex-1">
-		<Resizable.Pane defaultSize={30} minSize={20}>
-			<div class="h-full flex flex-col overflow-hidden">
+	{#if isMobile}
+		<!-- Mobile Layout: Tabs for Editor/Graph -->
+		<Tabs.Root bind:value={mobileView} class="flex-1 flex flex-col overflow-hidden">
+			<Tabs.List class="grid w-full grid-cols-2 h-10 px-2">
+				<Tabs.Trigger value="editor">{$LL.navigation.editor()}</Tabs.Trigger>
+				<Tabs.Trigger value="graph">{$LL.navigation.graph()}</Tabs.Trigger>
+			</Tabs.List>
+			<Tabs.Content value="editor" class="flex-1 flex flex-col overflow-hidden mt-0">
 				<div class="flex flex-col border-b bg-muted/50">
-					<div class="h-8 flex items-center px-2 flex-shrink-0 gap-1">
-						<DropdownMenu.Root>
-							<DropdownMenu.Trigger
-								class="inline-flex items-center justify-center h-7 px-2 text-xs gap-1 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground"
-							>
-								{httpMethod}
-								<ChevronDown class="h-3 w-3" />
-							</DropdownMenu.Trigger>
-							<DropdownMenu.Content align="start">
-								{#each httpMethods as method}
-									<DropdownMenu.Item
-										onclick={() => handleMethodChange(method)}
-										class="flex items-center justify-between"
-									>
-										<span>{method}</span>
-										{#if httpMethod === method}
-											<Check class="h-3 w-3" />
-										{/if}
-									</DropdownMenu.Item>
-								{/each}
-							</DropdownMenu.Content>
-						</DropdownMenu.Root>
-						<Input
-							type="url"
-							placeholder={$LL.editor.urlPlaceholder()}
-							bind:value={urlInputLocal}
-							onkeydown={handleUrlKeydown}
-							onblur={handleUrlBlur}
-							class="h-7 text-xs flex-1"
-							disabled={isLoading}
-						/>
-						<Button
-							size="sm"
-							variant="ghost"
-							onclick={openSettingsDialog}
-							class="h-7 px-2"
-							title={$LL.editor.requestSettings()}
-						>
-							<Settings2 class="w-3 h-3" />
-						</Button>
-						<Button
-							size="sm"
-							variant="ghost"
-							onclick={fetchJsonFromUrl}
-							disabled={isLoading}
-							class="h-7 px-2 text-sm flex items-center gap-1"
-						>
-							{#if isLoading}
-								<Loader class="w-3 h-3 animate-spin" />
-							{:else}
-								<ArrowRight class="w-3 h-3" />
-							{/if}
-							{$LL.editor.go()}
-						</Button>
-					</div>
-					<div class="h-8 flex items-center justify-end px-2 flex-shrink-0 gap-1 border-t">
-						<Button
-							size="sm"
-							variant="ghost"
-							onclick={clearJson}
-							class="h-7 px-2 text-sm flex items-center gap-1"
-							title={$LL.header.clear()}
-						>
-							<X class="w-3 h-3" />
-							{$LL.header.clear()}
-						</Button>
-						<Button
-							size="sm"
-							variant="ghost"
-							onclick={copyJson}
-							class="h-7 px-2 text-sm flex items-center gap-1"
-							title={$LL.header.copy()}
-						>
-							<Copy class="w-3 h-3" />
-							{$LL.header.copy()}
-						</Button>
-						<Button
-							size="sm"
-							variant="ghost"
-							onclick={formatJson}
-							class="h-7 px-2 text-sm flex items-center gap-1"
-						>
-							<FileCode2 class="w-3 h-3" />
-							{$LL.header.format()}
-						</Button>
-						<Button
-							size="sm"
-							variant="ghost"
-							onclick={minifyJson}
-							class="h-7 px-2 text-sm flex items-center gap-1"
-						>
-							<Minimize2 class="w-3 h-3" />
-							{$LL.header.minify()}
-						</Button>
-						<Button
-							size="sm"
-							variant="ghost"
-							onclick={regenerateValues}
-							class="h-7 px-2 text-sm flex items-center gap-1"
-							title={$LL.editor.regenerateTooltip()}
-						>
-							<RefreshCw class="w-3 h-3" />
-							{$LL.editor.regenerate()}
-						</Button>
-					</div>
+					<EditorToolbar
+						{httpMethod}
+						bind:url={urlInputLocal}
+						{isLoading}
+						onMethodChange={(method) => saveUrlAndMethod(undefined, method)}
+						onUrlChange={(url) => (urlInputLocal = url)}
+						onUrlBlur={() => saveUrlAndMethod(urlInputLocal, undefined)}
+						onGo={fetchJsonFromUrl}
+						onSettings={() => (isDialogOpen = true)}
+					/>
+					<EditorActions
+						onClear={clearJson}
+						onCopy={copyJson}
+						onFormat={formatJson}
+						onMinify={minifyJson}
+						onRegenerate={regenerateValues}
+					/>
 				</div>
 				<div class="flex-1 overflow-hidden">
 					{#key tabsStore.activeTabId}
 						<JsonEditor bind:value={editorValue} bind:this={editorRef} class="h-full w-full" />
 					{/key}
 				</div>
-			</div>
-		</Resizable.Pane>
-
-		<Resizable.Handle withHandle />
-
-		<Resizable.Pane defaultSize={50} minSize={20}>
-			<div class="h-full flex flex-col overflow-hidden">
-				<div class="flex-1 overflow-hidden">
-					{#key tabsStore.activeTabId}
-						{#if parsedJson}
-							<JsonGraph jsonData={parsedJson} jsonString={editorValue} class="h-full" />
-						{:else}
-							<div class="h-full flex items-center justify-center text-muted-foreground">
-								{$LL.editor.placeholder()}
-							</div>
-						{/if}
-					{/key}
+			</Tabs.Content>
+			<Tabs.Content value="graph" class="flex-1 overflow-hidden mt-0">
+				{#key tabsStore.activeTabId}
+					{#if parsedJson}
+						<JsonGraph jsonData={parsedJson} jsonString={editorValue} class="h-full" />
+					{:else}
+						<div class="h-full flex items-center justify-center text-muted-foreground">
+							{$LL.editor.placeholder()}
+						</div>
+					{/if}
+				{/key}
+			</Tabs.Content>
+		</Tabs.Root>
+	{:else}
+		<!-- Desktop Layout: Resizable Panes -->
+		<Resizable.PaneGroup direction="horizontal" class="flex-1">
+			<Resizable.Pane defaultSize={30} minSize={20}>
+				<div class="h-full flex flex-col overflow-hidden">
+					<div class="flex flex-col border-b bg-muted/50">
+						<EditorToolbar
+							{httpMethod}
+							bind:url={urlInputLocal}
+							{isLoading}
+							onMethodChange={(method) => saveUrlAndMethod(undefined, method)}
+							onUrlChange={(url) => (urlInputLocal = url)}
+							onUrlBlur={() => saveUrlAndMethod(urlInputLocal, undefined)}
+							onGo={fetchJsonFromUrl}
+							onSettings={() => (isDialogOpen = true)}
+						/>
+						<EditorActions
+							onClear={clearJson}
+							onCopy={copyJson}
+							onFormat={formatJson}
+							onMinify={minifyJson}
+							onRegenerate={regenerateValues}
+						/>
+					</div>
+					<div class="flex-1 overflow-hidden">
+						{#key tabsStore.activeTabId}
+							<JsonEditor bind:value={editorValue} bind:this={editorRef} class="h-full w-full" />
+						{/key}
+					</div>
 				</div>
-			</div>
-		</Resizable.Pane>
-	</Resizable.PaneGroup>
+			</Resizable.Pane>
+
+			<Resizable.Handle withHandle />
+
+			<Resizable.Pane defaultSize={50} minSize={20}>
+				<div class="h-full flex flex-col overflow-hidden">
+					<div class="flex-1 overflow-hidden">
+						{#key tabsStore.activeTabId}
+							{#if parsedJson}
+								<JsonGraph jsonData={parsedJson} jsonString={editorValue} class="h-full" />
+							{:else}
+								<div class="h-full flex items-center justify-center text-muted-foreground">
+									{$LL.editor.placeholder()}
+								</div>
+							{/if}
+						{/key}
+					</div>
+				</div>
+			</Resizable.Pane>
+		</Resizable.PaneGroup>
+	{/if}
 
 	<!-- Footer -->
 	<footer class="h-8 border-t bg-card flex items-center px-4 text-sm text-muted-foreground">
@@ -703,88 +562,13 @@
 </div>
 
 <!-- HTTP Request Settings Dialog -->
-<Dialog.Root bind:open={isDialogOpen}>
-	<Dialog.Content class="sm:max-w-[600px]">
-		<Dialog.Header>
-			<Dialog.Title>{$LL.editor.requestSettings()}</Dialog.Title>
-			<Dialog.Description>
-				{$LL.editor.requestSettingsDescription()}
-			</Dialog.Description>
-		</Dialog.Header>
-
-		<div class="space-y-4">
-			<!-- Headers Section -->
-			<div>
-				<h4 class="text-sm font-medium mb-2">{$LL.editor.headers()}</h4>
-				<div class="space-y-2">
-					<div class={tempHeaders.length >= 4 ? 'max-h-48 overflow-y-auto space-y-2' : 'space-y-2'}>
-						{#each tempHeaders as header, index}
-							<div class="flex gap-2">
-								<Input
-									placeholder={$LL.editor.headerKey()}
-									value={header.key}
-									oninput={(e) => updateHeader(index, 'key', e.currentTarget.value)}
-									class="flex-1"
-								/>
-								<Input
-									placeholder={$LL.editor.headerValue()}
-									value={header.value}
-									oninput={(e) => updateHeader(index, 'value', e.currentTarget.value)}
-									class="flex-1"
-								/>
-								<Button variant="ghost" size="icon" onclick={() => removeHeader(index)}>
-									<Trash2 class="h-4 w-4" />
-								</Button>
-							</div>
-						{/each}
-					</div>
-					<Button variant="outline" size="sm" onclick={addHeader} class="w-full">
-						<Plus class="h-4 w-4 mr-2" />
-						{$LL.editor.addHeader()}
-					</Button>
-				</div>
-			</div>
-
-			<!-- Body Section -->
-			<div>
-				<h4 class="text-sm font-medium mb-2">{$LL.editor.body()}</h4>
-				<p class="text-xs text-muted-foreground mb-2">
-					{$LL.editor.bodyDescription()}
-				</p>
-				<div class="space-y-3 mb-3">
-					<div class="flex items-center space-x-2">
-						<Checkbox id="use-editor-content" bind:checked={tempUseEditorContent} />
-						<label for="use-editor-content" class="text-sm cursor-pointer">
-							{$LL.editor.useEditorContent()}
-						</label>
-					</div>
-					<div class="flex items-center space-x-2">
-						<Checkbox id="raw-body-mode" bind:checked={tempSendAsRawText} />
-						<label for="raw-body-mode" class="text-sm cursor-pointer">
-							{$LL.editor.sendAsRawText()}
-						</label>
-					</div>
-				</div>
-				<Textarea
-					placeholder={$LL.editor.bodyPlaceholder()}
-					bind:value={tempBody}
-					class="min-h-[150px] font-mono text-sm"
-				/>
-			</div>
-		</div>
-
-		<Dialog.Footer class="!flex !justify-between !items-center !flex-row">
-			<Button variant="destructive" onclick={clearAllSettings}>
-				{$LL.editor.clearAll()}
-			</Button>
-			<div class="flex gap-2">
-				<Button variant="outline" onclick={cancelSettings}>
-					{$LL.editor.cancel()}
-				</Button>
-				<Button onclick={saveSettings}>
-					{$LL.editor.save()}
-				</Button>
-			</div>
-		</Dialog.Footer>
-	</Dialog.Content>
-</Dialog.Root>
+<RequestSettingsDialog
+	bind:isOpen={isDialogOpen}
+	headers={customHeaders}
+	body={customBody}
+	{sendAsRawText}
+	{useEditorContent}
+	onSave={handleSettingsSave}
+	onCancel={handleSettingsCancel}
+	onClearAll={clearAllSettings}
+/>

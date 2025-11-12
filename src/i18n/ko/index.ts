@@ -15,7 +15,9 @@ const ko: Translation = {
 		timestamp: '타임스탬프',
 		yamlJson: 'YAML/JSON',
 		cron: 'Cron 표현식',
-		qrCode: 'QR 코드'
+		qrCode: 'QR 코드',
+		editor: '에디터',
+		graph: '그래프'
 	},
 	header: {
 		title: 'JSON 에디터',

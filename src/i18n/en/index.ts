@@ -15,7 +15,9 @@ const en: BaseTranslation = {
 		timestamp: 'Timestamp',
 		yamlJson: 'YAML/JSON',
 		cron: 'Cron Expression',
-		qrCode: 'QR Code'
+		qrCode: 'QR Code',
+		editor: 'Editor',
+		graph: 'Graph'
 	},
 	header: {
 		title: 'JSON Editor',
