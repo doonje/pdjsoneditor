@@ -32,25 +32,15 @@ pipeline {
                 script {
                     echo "🔍 Checking out repository..."
 
-                    checkout([
-                        $class: 'GitSCM',
-                        branches: [[name: '*/master']],
-                        doGenerateSubmoduleConfigurations: false,
-                        extensions: [
-                            [$class: 'CleanBeforeCheckout'],
-                            [$class: 'CloneOption', depth: 0, noTags: false, shallow: false]
-                        ],
-                        submoduleCfg: [],
-                        userRemoteConfigs: [[
-                            url: scm.userRemoteConfigs[0].url,
-                            credentialsId: 'github-personal-access-token'
-                        ]]
-                    ])
+                    // Jenkins Job 설정에서 지정한 브랜치 사용
+                    checkout scm
 
                     env.GIT_COMMIT = sh(returnStdout: true, script: "git rev-parse HEAD").trim()
                     env.GIT_COMMIT_SHORT = sh(returnStdout: true, script: "git rev-parse --short HEAD").trim()
+                    env.GIT_BRANCH = sh(returnStdout: true, script: "git rev-parse --abbrev-ref HEAD").trim()
 
                     echo "✅ Checkout complete"
+                    echo "Branch: ${env.GIT_BRANCH}"
                     echo "Commit: ${env.GIT_COMMIT_SHORT}"
                 }
             }
@@ -95,10 +85,10 @@ pipeline {
                         usernameVariable: 'GIT_USERNAME',
                         passwordVariable: 'GIT_PASSWORD'
                     )]) {
-                        sh '''
-                            git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${GIT_USERNAME}/pdjsoneditor.git HEAD:master
-                            git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${GIT_USERNAME}/pdjsoneditor.git --tags
-                        '''
+                        sh """
+                            git push https://\${GIT_USERNAME}:\${GIT_PASSWORD}@github.com/doonje/pdjsoneditor.git HEAD:${env.GIT_BRANCH}
+                            git push https://\${GIT_USERNAME}:\${GIT_PASSWORD}@github.com/doonje/pdjsoneditor.git --tags
+                        """
                     }
 
                     echo "✅ Version bump and tag pushed to repository"
@@ -177,6 +167,7 @@ pipeline {
 
                 def appVersion = env.APP_VERSION ?: 'unknown'
                 def gitCommit = env.GIT_COMMIT_SHORT ?: 'unknown'
+                def gitBranch = env.GIT_BRANCH ?: 'unknown'
                 def buildUrl = env.BUILD_URL ?: 'Jenkins'
                 def buildNumber = env.BUILD_NUMBER ?: 'unknown'
 
@@ -201,7 +192,7 @@ pipeline {
                               },
                               {
                                 "type": "mrkdwn",
-                                "text": "*브랜치:*\\nmaster"
+                                "text": "*브랜치:*\\n${gitBranch}"
                               },
                               {
                                 "type": "mrkdwn",
@@ -253,6 +244,7 @@ pipeline {
 
                 def appVersion = env.APP_VERSION ?: 'unknown'
                 def gitCommit = env.GIT_COMMIT_SHORT ?: 'unknown'
+                def gitBranch = env.GIT_BRANCH ?: 'unknown'
                 def buildUrl = env.BUILD_URL ?: 'Jenkins'
                 def buildNumber = env.BUILD_NUMBER ?: 'unknown'
 
@@ -277,7 +269,7 @@ pipeline {
                               },
                               {
                                 "type": "mrkdwn",
-                                "text": "*브랜치:*\\nmaster"
+                                "text": "*브랜치:*\\n${gitBranch}"
                               },
                               {
                                 "type": "mrkdwn",
