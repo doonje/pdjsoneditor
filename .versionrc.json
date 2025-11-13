@@ -1,0 +1,22 @@
+{
+	"types": [
+		{ "type": "feat", "section": "✨ Features" },
+		{ "type": "fix", "section": "🐛 Bug Fixes" },
+		{ "type": "refactor", "section": "♻️ Refactoring" },
+		{ "type": "perf", "section": "⚡ Performance" },
+		{ "type": "docs", "section": "📝 Documentation" },
+		{ "type": "style", "section": "💄 Styles" },
+		{ "type": "test", "section": "✅ Tests" },
+		{ "type": "build", "section": "📦 Build" },
+		{ "type": "ci", "section": "👷 CI/CD" },
+		{ "type": "chore", "section": "🔧 Chores" }
+	],
+	"releaseCommitMessageFormat": "chore(release): {{currentTag}} [skip ci]",
+	"skip": {
+		"changelog": false
+	},
+	"header": "# 변경 이력 (Changelog)\n\n이 파일은 프로젝트의 주요 변경사항을 기록합니다.\n\n",
+	"scripts": {
+		"postchangelog": "prettier --write CHANGELOG.md"
+	}
+}
