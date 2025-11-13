@@ -65,7 +65,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    echo "🐳 Building Docker image for ARM64..."
+                    echo "🐳 Building Docker image for AMD64..."
 
                     sh '''
                         export DOCKER_CONFIG="${WORKSPACE}/.docker"
@@ -97,9 +97,9 @@ pipeline {
                         echo "🔧 Creating/using builder..."
                         "${BUILDX}" create --use --name pdjsoneditor-builder --driver docker-container 2>/dev/null || "${BUILDX}" use pdjsoneditor-builder
 
-                        echo "🚀 Building ARM64 image..."
+                        echo "🚀 Building AMD64 image..."
                         "${BUILDX}" build \
-                          --platform linux/arm64 \
+                          --platform linux/amd64 \
                           --tag ${DOCKER_IMAGE}:${IMAGE_TAG} \
                           --tag ${DOCKER_IMAGE}:latest \
                           --cache-from type=registry,ref=${DOCKER_IMAGE}:buildcache \
