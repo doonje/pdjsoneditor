@@ -27,3 +27,20 @@ vite.config.ts.timestamp-*
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# IDEs and Editors
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.launch
+
+# MCP Servers
+.serena/

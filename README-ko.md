@@ -1,5 +1,9 @@
 # PDJsonEditor
 
+> **📢 중요 공지**
+> 이 프로젝트의 오리지널 소스는 https://github.com/podosoft-dev/pdjsoneditor 에 있습니다.
+> 이 프로젝트는 오리지널 소스에 개발 유틸 기능을 추가한 버전입니다.
+
 _[English](README.md)_
 
 SvelteKit과 Svelte 5로 구축된 강력한 JSON 시각화 및 편집 도구입니다. JSON 데이터를 코드 에디터와 인터랙티브 그래프 뷰에서 동시에 보고 편집할 수 있습니다.
