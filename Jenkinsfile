@@ -73,14 +73,14 @@ pipeline {
 
                         # Buildx 로컬 설치 경로
                         BUILDX_DIR="${WORKSPACE}/.buildx-cache"
-                        mkdir -p ${BUILDX_DIR}
+                        mkdir -p "${BUILDX_DIR}"
 
                         # Buildx 다운로드 (캐싱)
                         if [ ! -f "${BUILDX_DIR}/docker-buildx" ]; then
                             echo "📦 Downloading buildx..."
                             curl -sSL https://github.com/docker/buildx/releases/download/v0.18.0/buildx-v0.18.0.linux-amd64 \
-                              -o ${BUILDX_DIR}/docker-buildx
-                            chmod +x ${BUILDX_DIR}/docker-buildx
+                              -o "${BUILDX_DIR}/docker-buildx"
+                            chmod +x "${BUILDX_DIR}/docker-buildx"
                             echo "✅ Buildx downloaded"
                         else
                             echo "✅ Using cached buildx"
@@ -95,10 +95,10 @@ pipeline {
                         docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 
                         echo "🔧 Creating/using builder..."
-                        ${BUILDX} create --use --name pdjsoneditor-builder --driver docker-container 2>/dev/null || ${BUILDX} use pdjsoneditor-builder
+                        "${BUILDX}" create --use --name pdjsoneditor-builder --driver docker-container 2>/dev/null || "${BUILDX}" use pdjsoneditor-builder
 
                         echo "🚀 Building ARM64 image..."
-                        ${BUILDX} build \
+                        "${BUILDX}" build \
                           --platform linux/arm64 \
                           --tag ${DOCKER_IMAGE}:${IMAGE_TAG} \
                           --tag ${DOCKER_IMAGE}:latest \
