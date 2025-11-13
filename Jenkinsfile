@@ -23,75 +23,41 @@ pipeline {
         timestamps()
         timeout(time: 30, unit: 'MINUTES')
         buildDiscarder(logRotator(numToKeepStr: '10'))
-        skipDefaultCheckout()
     }
 
     stages {
-        stage('Checkout') {
+        stage('Prepare Build Info') {
             steps {
                 script {
-                    echo "🔍 Checking out repository..."
+                    echo "🔍 Setting up build information..."
 
-                    // Jenkins Job 설정에서 지정한 브랜치 사용
-                    checkout scm
-
+                    // Git 정보 추출 (Jenkins가 이미 체크아웃 완료)
                     env.GIT_COMMIT = sh(returnStdout: true, script: "git rev-parse HEAD").trim()
                     env.GIT_COMMIT_SHORT = sh(returnStdout: true, script: "git rev-parse --short HEAD").trim()
-                    env.GIT_BRANCH = sh(returnStdout: true, script: "git rev-parse --abbrev-ref HEAD").trim()
 
-                    echo "✅ Checkout complete"
-                    echo "Branch: ${env.GIT_BRANCH}"
-                    echo "Commit: ${env.GIT_COMMIT_SHORT}"
-                }
-            }
-        }
-
-        stage('Version Bump') {
-            steps {
-                script {
-                    echo "📦 Bumping version automatically..."
-
-                    // Git 설정
-                    sh '''
-                        git config user.email "jenkins@pdjsoneditor.com"
-                        git config user.name "Jenkins CI"
-                    '''
-
-                    // 의존성 설치 (standard-version 필요)
-                    sh 'npm ci'
-
-                    // 현재 버전 확인
-                    def currentVersion = sh(
-                        script: "node -p \"require('./package.json').version\"",
-                        returnStdout: true
-                    ).trim()
-                    echo "Current version: ${currentVersion}"
-
-                    // standard-version으로 패치 버전 자동 증가
-                    sh 'npx standard-version'
-
-                    // 새 버전 확인
-                    def newVersion = sh(
-                        script: "node -p \"require('./package.json').version\"",
-                        returnStdout: true
+                    // 브랜치명 추출 (detached HEAD 상태 처리)
+                    def branchName = sh(
+                        returnStdout: true,
+                        script: "git symbolic-ref --short HEAD 2>/dev/null || echo 'detached'"
                     ).trim()
 
-                    env.APP_VERSION = newVersion
-                    echo "✅ New version: ${env.APP_VERSION}"
-
-                    // Git push (버전 업데이트 및 태그)
-                    withCredentials([usernamePassword(
-                        credentialsId: 'github-personal-access-token',
-                        usernameVariable: 'GIT_USERNAME',
-                        passwordVariable: 'GIT_PASSWORD'
-                    )]) {
-                        sh """
-                            git push https://\${GIT_USERNAME}:\${GIT_PASSWORD}@github.com/doonje/pdjsoneditor.git HEAD:${env.GIT_BRANCH}
-                            git push https://\${GIT_USERNAME}:\${GIT_PASSWORD}@github.com/doonje/pdjsoneditor.git --tags
-                        """
+                    // detached HEAD인 경우 (Jenkins 기본 동작) origin/main 에서 브랜치명 추출
+                    if (branchName == 'detached') {
+                        branchName = sh(
+                            returnStdout: true,
+                            script: "git branch -r --contains HEAD | grep origin | head -1 | sed 's|origin/||' | xargs"
+                        ).trim()
                     }
 
-                    echo "✅ Version bump and tag pushed to repository"
+                    env.GIT_BRANCH = branchName ?: 'unknown'
+
+                    // 빌드 번호와 커밋 해시를 조합한 버전 태그 생성
+                    env.IMAGE_TAG = "${env.BUILD_NUMBER}-${env.GIT_COMMIT_SHORT}"
+
+                    echo "✅ Build information:"
+                    echo "  Branch: ${env.GIT_BRANCH}"
+                    echo "  Commit: ${env.GIT_COMMIT_SHORT}"
+                    echo "  Image Tag: ${env.IMAGE_TAG}"
                 }
             }
         }
@@ -134,7 +100,7 @@ pipeline {
                         echo "🚀 Building ARM64 image..."
                         ${BUILDX} build \
                           --platform linux/arm64 \
-                          --tag ${DOCKER_IMAGE}:${APP_VERSION} \
+                          --tag ${DOCKER_IMAGE}:${IMAGE_TAG} \
                           --tag ${DOCKER_IMAGE}:latest \
                           --cache-from type=registry,ref=${DOCKER_IMAGE}:buildcache \
                           --cache-to type=registry,ref=${DOCKER_IMAGE}:buildcache,mode=max \
@@ -144,7 +110,7 @@ pipeline {
 
                         echo "✅ Docker image pushed successfully"
                         echo "Images:"
-                        echo "  - ${DOCKER_IMAGE}:${APP_VERSION}"
+                        echo "  - ${DOCKER_IMAGE}:${IMAGE_TAG}"
                         echo "  - ${DOCKER_IMAGE}:latest"
                     '''
                 }
@@ -165,7 +131,7 @@ pipeline {
             script {
                 echo "✅ Build succeeded!"
 
-                def appVersion = env.APP_VERSION ?: 'unknown'
+                def imageTag = env.IMAGE_TAG ?: 'unknown'
                 def gitCommit = env.GIT_COMMIT_SHORT ?: 'unknown'
                 def gitBranch = env.GIT_BRANCH ?: 'unknown'
                 def buildUrl = env.BUILD_URL ?: 'Jenkins'
@@ -196,7 +162,7 @@ pipeline {
                               },
                               {
                                 "type": "mrkdwn",
-                                "text": "*버전:*\\nv${appVersion}"
+                                "text": "*이미지 태그:*\\n${imageTag}"
                               },
                               {
                                 "type": "mrkdwn",
@@ -208,7 +174,7 @@ pipeline {
                               },
                               {
                                 "type": "mrkdwn",
-                                "text": "*Docker 이미지:*\\ndoonje/dev-utils:${appVersion}"
+                                "text": "*Docker 이미지:*\\ndoonje/dev-utils:${imageTag}"
                               }
                             ]
                           },
@@ -242,7 +208,7 @@ pipeline {
             script {
                 echo "❌ Build failed!"
 
-                def appVersion = env.APP_VERSION ?: 'unknown'
+                def imageTag = env.IMAGE_TAG ?: 'unknown'
                 def gitCommit = env.GIT_COMMIT_SHORT ?: 'unknown'
                 def gitBranch = env.GIT_BRANCH ?: 'unknown'
                 def buildUrl = env.BUILD_URL ?: 'Jenkins'
@@ -273,7 +239,7 @@ pipeline {
                               },
                               {
                                 "type": "mrkdwn",
-                                "text": "*버전:*\\n${appVersion}"
+                                "text": "*이미지 태그:*\\n${imageTag}"
                               },
                               {
                                 "type": "mrkdwn",
