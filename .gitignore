@@ -44,3 +44,5 @@ vite.config.ts.timestamp-*
 
 # MCP Servers
 .serena/
+.playwright-mcp/
+claudedocs/
