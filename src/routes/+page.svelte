@@ -79,9 +79,7 @@
 
 	// Sync local URL input with tab's URL
 	$effect(() => {
-		const tabUrl =
-			tabsStore.getActiveTab()?.requestSettings?.url ||
-			'https://jsonplaceholder.typicode.com/todos/1';
+		const tabUrl = tabsStore.getActiveTab()?.requestSettings?.url || '';
 		urlInputLocal = tabUrl;
 	});
 
@@ -116,7 +114,7 @@
 
 			// Reset tab's request settings to defaults
 			tabsStore.updateActiveTabRequestSettings({
-				url: 'https://jsonplaceholder.typicode.com/todos/1',
+				url: '',
 				method: 'GET',
 				headers: [],
 				body: '',

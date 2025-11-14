@@ -14,7 +14,7 @@ export interface RequestSettingsState {
 const getInitial = (): RequestSettingsState => {
 	if (typeof window === 'undefined') {
 		return {
-			url: 'https://jsonplaceholder.typicode.com/todos/1',
+			url: '',
 			method: 'GET',
 			headers: [],
 			body: '',
@@ -23,8 +23,7 @@ const getInitial = (): RequestSettingsState => {
 		};
 	}
 
-	let url =
-		localStorage.getItem(STORAGE_KEYS.URL) || 'https://jsonplaceholder.typicode.com/todos/1';
+	let url = localStorage.getItem(STORAGE_KEYS.URL) || '';
 	const rawMethod = localStorage.getItem(STORAGE_KEYS.METHOD) as HttpMethod | null;
 	const method: HttpMethod =
 		rawMethod && ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].includes(rawMethod) ? rawMethod : 'GET';

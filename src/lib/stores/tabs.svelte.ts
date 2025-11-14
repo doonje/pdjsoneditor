@@ -73,7 +73,7 @@ class TabsStore {
 				showAllItemsNodes: new Set<string>()
 			},
 			requestSettings: {
-				url: 'https://jsonplaceholder.typicode.com/todos/1',
+				url: '',
 				method: 'GET',
 				headers: [],
 				body: '',
@@ -193,7 +193,7 @@ class TabsStore {
 						headers: tab.requestSettings.headers ? [...tab.requestSettings.headers] : []
 					}
 				: {
-						url: 'https://jsonplaceholder.typicode.com/todos/1',
+						url: '',
 						method: 'GET',
 						headers: [],
 						body: '',
