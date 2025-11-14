@@ -1,9 +1,9 @@
 import { logger } from '$lib/logger';
 import { generateSampleJSON } from '$lib/utils/faker-generator';
 
-// Generate sample JSON data for new tabs using faker
+// Return empty string for new tabs
 function getDefaultJSON(): string {
-	return JSON.stringify(generateSampleJSON(), null, 2);
+	return '';
 }
 
 // Tab data interface
