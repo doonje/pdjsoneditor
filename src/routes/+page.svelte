@@ -7,12 +7,8 @@
 	import EditorActions from '$lib/components/EditorActions.svelte';
 	import RequestSettingsDialog from '$lib/components/RequestSettingsDialog.svelte';
 	import { tabsStore } from '$lib/stores/tabs.svelte';
-	import { Button } from '$lib/components/ui/button';
 	import * as Tabs from '$lib/components/ui/tabs';
 	import * as Resizable from '$lib/components/ui/resizable/index.js';
-	import { Moon, Sun } from 'lucide-svelte';
-	import { mode, toggleMode } from 'mode-watcher';
-	import LanguageSwitcher from '$lib/components/LanguageSwitcher.svelte';
 	import LL from '$i18n/i18n-svelte';
 	import { toast } from 'svelte-sonner';
 	import type { JsonValue } from '$lib/types/json';
@@ -413,21 +409,6 @@
 </script>
 
 <div class="h-full flex flex-col bg-background max-w-full overflow-x-hidden" style="max-width: 100vw;">
-	<!-- Header -->
-	<header class="h-12 border-b bg-card flex items-center px-4 flex-shrink-0">
-		<h1 class="text-base font-semibold">{$LL.header.title()}</h1>
-		<div class="ml-auto flex items-center gap-2">
-			<LanguageSwitcher />
-			<Button size="sm" variant="ghost" onclick={toggleMode} class="h-8 w-8 px-0">
-				{#if mode.current === 'light'}
-					<Moon class="h-4 w-4" />
-				{:else}
-					<Sun class="h-4 w-4" />
-				{/if}
-			</Button>
-		</div>
-	</header>
-
 	<!-- Tab Bar -->
 	<div class="flex-shrink-0">
 		<TabBar />
