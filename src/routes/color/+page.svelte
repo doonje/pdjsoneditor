@@ -9,8 +9,8 @@
 	import { hexToRgb, rgbToHex, rgbToHsl } from '$lib/utils/color';
 
 	let hexInput = $state('#FF5733');
-	let rgb = $derived.by(() => hexToRgb(hexInput));
-	let hsl = $derived.by(() => {
+	const rgb = $derived.by(() => hexToRgb(hexInput));
+	const hsl = $derived.by(() => {
 		const rgbColor = hexToRgb(hexInput);
 		return rgbColor ? rgbToHsl(rgbColor.r, rgbColor.g, rgbColor.b) : null;
 	});

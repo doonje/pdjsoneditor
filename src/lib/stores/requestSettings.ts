@@ -23,7 +23,7 @@ const getInitial = (): RequestSettingsState => {
 		};
 	}
 
-	let url = localStorage.getItem(STORAGE_KEYS.URL) || '';
+	const url = localStorage.getItem(STORAGE_KEYS.URL) || '';
 	const rawMethod = localStorage.getItem(STORAGE_KEYS.METHOD) as HttpMethod | null;
 	const method: HttpMethod =
 		rawMethod && ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].includes(rawMethod) ? rawMethod : 'GET';

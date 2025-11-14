@@ -1,10 +1,11 @@
 import { writable } from 'svelte/store';
+import type { ComponentType, SvelteComponent } from 'svelte';
 
 const MENU_ORDER_KEY = 'menu-order';
 
-export interface MenuItem {
+export interface IMenuItem {
 	href: string;
-	icon: any;
+	icon: ComponentType<SvelteComponent>;
 	labelKey: string;
 }
 

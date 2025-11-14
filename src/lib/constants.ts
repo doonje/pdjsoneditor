@@ -4,7 +4,8 @@ export const STORAGE_KEYS = {
 	HEADERS: 'pdjsoneditor_headers',
 	BODY: 'pdjsoneditor_body',
 	RAW_BODY_MODE: 'pdjsoneditor_raw_body_mode',
-	USE_EDITOR_CONTENT: 'pdjsoneditor_use_editor_content'
+	USE_EDITOR_CONTENT: 'pdjsoneditor_use_editor_content',
+	TABS: 'pdjsoneditor_tabs'
 } as const;
 
 export type StorageKey = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS];

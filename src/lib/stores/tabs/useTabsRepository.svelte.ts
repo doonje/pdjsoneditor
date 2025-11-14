@@ -54,7 +54,7 @@ export function useTabsRepository(
 			tabs.length = 0;
 
 			// Reconstruct tabs with Set objects
-			const loadedTabs = data.tabs.map((tab: any) => ({
+			const loadedTabs = data.tabs.map((tab: TabData) => ({
 				...tab,
 				graphState: tab.graphState
 					? {

@@ -1,3 +1,39 @@
+<!--
+	@component JsonGraph
+	@description JSON 데이터를 인터랙티브 그래프로 시각화하는 컴포넌트
+
+	@xyflow/svelte를 활용하여 JSON 구조를 노드-엣지 그래프로 렌더링합니다.
+	대규모 JSON도 처리할 수 있도록 Web Worker에서 레이아웃을 계산합니다.
+
+	@features
+	- 자동 레이아웃 (Dagre 알고리즘)
+	- 노드 확장/축소
+	- 줌/팬 인터랙션
+	- 다크/라이트 테마 지원
+	- 미니맵 및 컨트롤
+
+	@example
+	```svelte
+	<JsonGraph
+		jsonData={parsedJson}
+		jsonString={originalString}
+		class="h-full"
+	/>
+	```
+
+	@props
+	- jsonData (JsonValue): 시각화할 JSON 데이터
+	- jsonString (string): 원본 JSON 문자열 (숫자 포맷 보존용)
+	- class (string): 추가 CSS 클래스
+
+	@events
+	- nodeClick: 노드 클릭 시 발생 (detail: { path: string })
+
+	@public-methods
+	- resetGraph(): 그래프를 재생성하고 레이아웃 재계산
+	- expandNode(nodeId: string): 특정 노드 확장
+	- collapseNode(nodeId: string): 특정 노드 축소
+-->
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
 	import {
@@ -23,13 +59,19 @@
 	import GraphLayoutWorker from '$lib/workers/graphLayout.worker.ts?worker&module';
 	import type { JsonValue, NodeItem } from '$lib/types/json';
 
-	interface Props {
+	/**
+	 * JsonGraph 컴포넌트 Props 인터페이스
+	 */
+	interface IJsonGraphProps {
+		/** 시각화할 JSON 데이터 */
 		jsonData: JsonValue;
-		jsonString?: string; // Original JSON string to preserve number formatting
+		/** 원본 JSON 문자열 (숫자 포맷 보존용) */
+		jsonString?: string;
+		/** 추가 CSS 클래스 */
 		class?: string;
 	}
 
-	const { jsonData, jsonString, class: className = '' }: Props = $props();
+	const { jsonData, jsonString, class: className = '' }: IJsonGraphProps = $props();
 
 	type NodeData = {
 		label: string;
@@ -56,7 +98,7 @@
 	let isFirstLoad = true;
 	let previousJsonData: JsonValue | null = null;
 	const nodeCallbacks = new Map<string, { toggle: () => void; expandAll: () => void }>();
-	let triggerFitView = $state(false);
+	const triggerFitView = $state(false);
 
 	// Helper function to get original number format from JSON string
 	function getOriginalNumberFormat(

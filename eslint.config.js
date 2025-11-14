@@ -33,11 +33,45 @@ export default [
 			'@typescript-eslint': typescript
 		},
 		rules: {
+			// TypeScript 타입 안전성 규칙
 			'@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-			'@typescript-eslint/no-explicit-any': 'warn',
-			'no-console': 'off',
-			'prefer-const': 'off',
+			'@typescript-eslint/no-explicit-any': 'error', // any 타입 완전 금지
+			'@typescript-eslint/explicit-function-return-type': 'off', // 타입 추론 활용
+			'@typescript-eslint/no-non-null-assertion': 'warn',
+			// 타입 정보가 필요한 규칙들은 비활성화 (parserOptions.project 설정 필요)
+			// '@typescript-eslint/no-unsafe-assignment': 'warn',
+			// '@typescript-eslint/no-unsafe-member-access': 'warn',
+			// '@typescript-eslint/no-unsafe-call': 'warn',
+			// '@typescript-eslint/no-unsafe-return': 'warn',
+			'@typescript-eslint/consistent-type-imports': ['error', {
+				prefer: 'type-imports',
+				disallowTypeAnnotations: true
+			}],
+
+			// 일반 코드 품질 규칙
+			'prefer-const': 'error',
 			'no-var': 'error',
+			'no-console': 'off', // 개발 중 console 허용
+			'no-debugger': 'error',
+			'no-alert': 'error',
+			'no-duplicate-imports': 'error',
+
+			// 명명 규칙 (인터페이스 I 접두사만 강제)
+			'@typescript-eslint/naming-convention': [
+				'error',
+				{
+					selector: 'interface',
+					format: ['PascalCase'],
+					prefix: ['I']
+				}
+			],
+
+			// 복잡도 관련 규칙 (적정 수준으로 완화)
+			'complexity': ['warn', { max: 15 }],
+			'max-depth': ['warn', { max: 5 }],
+			'max-lines': ['warn', { max: 500, skipComments: true }],
+
+			// 끄거나 완화된 규칙들
 			'no-undef': 'off',
 			'no-unused-vars': 'off'
 		}

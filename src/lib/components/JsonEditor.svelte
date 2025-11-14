@@ -1,3 +1,28 @@
+<!--
+	@component JsonEditor
+	@description CodeMirror 6 기반 JSON 편집기 컴포넌트
+
+	고급 JSON 편집 기능을 제공하며 다음 특징을 포함합니다:
+	- 실시간 JSON 문법 검사 및 하이라이팅
+	- 다크/라이트 테마 자동 전환
+	- JSON 경로 기반 네비게이션
+	- 양방향 데이터 바인딩
+
+	@example
+	```svelte
+	<JsonEditor bind:value={jsonString} class="h-full" />
+	```
+
+	@props
+	- value (string): 편집할 JSON 문자열 (양방향 바인딩)
+	- class (string): 추가 CSS 클래스
+
+	@events
+	없음 (value prop으로 양방향 바인딩)
+
+	@public-methods
+	- navigateToPath(path: string): 특정 JSON 경로로 커서 이동
+-->
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { EditorView, basicSetup } from 'codemirror';
@@ -9,12 +34,17 @@
 	import { mode } from 'mode-watcher';
 	import { logger } from '$lib/logger';
 
-	interface Props {
+	/**
+	 * JsonEditor 컴포넌트의 Props 인터페이스
+	 */
+	interface IJsonEditorProps {
+		/** 편집할 JSON 문자열 */
 		value: string;
+		/** 추가 CSS 클래스 */
 		class?: string;
 	}
 
-	let { value = $bindable(''), class: className = '' }: Props = $props();
+	let { value = $bindable(''), class: className = '' }: IJsonEditorProps = $props();
 
 	// Build a map of JSON paths to their character positions using CodeMirror's syntax tree
 	function buildPathToPositionMap(state: EditorState): Map<string, { start: number; end: number }> {

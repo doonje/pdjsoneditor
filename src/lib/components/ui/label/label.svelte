@@ -8,7 +8,7 @@
 		class?: string;
 	}
 
-	let { children, class: className, ...restProps }: Props = $props();
+	const { children, class: className, ...restProps }: Props = $props();
 </script>
 
 <label

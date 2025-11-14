@@ -65,13 +65,13 @@
 	let urlInputLocal = $state<string>('');
 
 	// Get current tab's request settings (derived)
-	let httpMethod = $derived(
+	const httpMethod = $derived(
 		(tabsStore.getActiveTab()?.requestSettings?.method || 'GET') as HttpMethod
 	);
-	let customHeaders = $derived(tabsStore.getActiveTab()?.requestSettings?.headers || []);
-	let customBody = $derived(tabsStore.getActiveTab()?.requestSettings?.body || '');
-	let sendAsRawText = $derived(tabsStore.getActiveTab()?.requestSettings?.sendAsRawText || false);
-	let useEditorContent = $derived(
+	const customHeaders = $derived(tabsStore.getActiveTab()?.requestSettings?.headers || []);
+	const customBody = $derived(tabsStore.getActiveTab()?.requestSettings?.body || '');
+	const sendAsRawText = $derived(tabsStore.getActiveTab()?.requestSettings?.sendAsRawText || false);
+	const useEditorContent = $derived(
 		tabsStore.getActiveTab()?.requestSettings?.useEditorContent || false
 	);
 

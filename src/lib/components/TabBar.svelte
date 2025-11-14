@@ -1,3 +1,34 @@
+<!--
+	@component TabBar
+	@description 멀티탭 인터페이스 관리 컴포넌트
+
+	JSON 에디터의 탭 관리를 담당하며, 각 탭은 독립적인 상태를 유지합니다.
+	반응형 디자인으로 모바일, 태블릿, 데스크톱 환경에 최적화되어 있습니다.
+
+	@features
+	- 탭 추가/제거/이름변경
+	- 탭 복제 및 내보내기
+	- 키보드 단축키 지원
+	- 반응형 UI (모바일/태블릿/데스크톱)
+	- 탭 상태 자동 저장
+
+	@example
+	```svelte
+	<TabBar />
+	```
+
+	@keyboard-shortcuts
+	- Cmd/Ctrl + T: 새 탭 추가
+	- Cmd/Ctrl + W: 현재 탭 닫기
+	- Cmd/Ctrl + Tab: 다음 탭으로 전환
+	- Cmd/Ctrl + Shift + Tab: 이전 탭으로 전환
+
+	@events
+	- tabChanged: 탭 전환 시 발생
+
+	@dependencies
+	- tabsStore: 전역 탭 상태 관리
+-->
 <script lang="ts">
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { Button } from '$lib/components/ui/button';

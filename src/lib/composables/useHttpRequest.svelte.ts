@@ -26,7 +26,7 @@ export function useHttpRequest() {
 			useEditorContent?: boolean;
 			editorContent?: string;
 		} = {}
-	): Promise<{ success: boolean; data?: any; error?: string }> {
+	): Promise<{ success: boolean; data?: unknown; error?: string }> {
 		// Cancel any in-flight request
 		if (abortController) {
 			abortController.abort();
@@ -52,14 +52,16 @@ export function useHttpRequest() {
 				? options.editorContent
 				: body;
 
-			const result = await requestJson(
+			const result = await requestJson({
 				url,
 				method,
 				headers,
-				requestBody,
-				options.sendAsRawText || false,
-				abortController.signal
-			);
+				editorJson: options.editorContent || '',
+				customBody: requestBody,
+				sendAsRawText: options.sendAsRawText || false,
+				useEditorContent: options.useEditorContent || false,
+				signal: abortController.signal
+			});
 
 			responseTime = Date.now() - startTime;
 			httpStatusCode = result.status || 200;
@@ -86,7 +88,8 @@ export function useHttpRequest() {
 
 			// Try to extract status code from error
 			if (error instanceof Error && 'status' in error) {
-				httpStatusCode = (error as any).status;
+				const errorWithStatus = error as Error & { status: number };
+				httpStatusCode = errorWithStatus.status;
 			}
 
 			return { success: false, error: errorMessage };

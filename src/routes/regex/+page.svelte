@@ -16,7 +16,7 @@
 
 	let pattern = $state('');
 	let testString = $state('');
-	let flags = $state({
+	const flags = $state({
 		global: true,
 		multiline: false,
 		caseInsensitive: false,

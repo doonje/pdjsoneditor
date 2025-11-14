@@ -17,7 +17,7 @@
 		onRegenerate: () => void;
 	}
 
-	let {
+	const {
 		onClear,
 		onCopy,
 		onFormat,
