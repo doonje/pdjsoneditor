@@ -6,7 +6,23 @@
 	import { tabsStore } from '$lib/stores/tabs.svelte';
 	import { logger } from '$lib/logger';
 	import { LL } from '$i18n/i18n-svelte';
-	import { Plus, X, MoreVertical, Copy, Edit2, Download, Upload, FileJson } from 'lucide-svelte';
+	import {
+		Plus,
+		X,
+		MoreVertical,
+		Copy,
+		Edit2,
+		Download,
+		Upload,
+		FileJson,
+		ChevronDown,
+		Check
+	} from 'lucide-svelte';
+	import { onMount } from 'svelte';
+
+	// Device type detection
+	type DeviceType = 'mobile' | 'tablet' | 'desktop';
+	let deviceType = $state<DeviceType>('desktop');
 
 	// State for tab renaming
 	let renamingTabId = $state<string | null>(null);
@@ -144,6 +160,26 @@
 	// File input ref for import
 	let fileInput: HTMLInputElement;
 
+	onMount(() => {
+		// Device type detection
+		const checkDevice = () => {
+			const width = window.innerWidth;
+			if (width < 640) {
+				deviceType = 'mobile';
+			} else if (width < 1024) {
+				deviceType = 'tablet';
+			} else {
+				deviceType = 'desktop';
+			}
+		};
+		checkDevice();
+		window.addEventListener('resize', checkDevice);
+
+		return () => {
+			window.removeEventListener('resize', checkDevice);
+		};
+	});
+
 	$effect(() => {
 		// Add keyboard event listener
 		window.addEventListener('keydown', handleKeyDown);
@@ -154,119 +190,216 @@
 </script>
 
 <div class="border-b bg-muted/10">
-	<div class="flex items-center px-2 py-1">
-		<Tabs.Root value={tabsStore.activeTabId} onValueChange={handleTabChange} class="flex-1">
-			<Tabs.List class="h-9 gap-1 bg-transparent p-0">
-				{#each tabsStore.tabs as tab (tab.id)}
-					<Tabs.Trigger
-						value={tab.id}
-						class="relative h-8 min-w-[120px] max-w-[200px] gap-2 rounded-t-md px-3 text-sm data-[state=active]:bg-background data-[state=active]:shadow-md data-[state=active]:border data-[state=active]:border-border data-[state=inactive]:bg-muted/30 data-[state=inactive]:hover:bg-muted/50 transition-colors"
-					>
-						{#if renamingTabId === tab.id}
-							<Input
-								bind:value={renameInput}
-								class="h-6 px-1 text-sm"
-								onclick={(e) => e.stopPropagation()}
-								onkeydown={(e) => {
-									if (e.key === 'Enter') {
-										confirmRename();
-									} else if (e.key === 'Escape') {
-										cancelRename();
-									}
-								}}
-								onblur={confirmRename}
-								autofocus
-							/>
-						{:else}
-							<div class="flex items-center gap-2 overflow-hidden w-full" title={tab.name}>
-								<FileJson class="h-3 w-3 flex-shrink-0" />
-								<span class="truncate">{tab.name}</span>
-								{#if tab.metadata?.lastModified}
-									<span class="text-muted-foreground flex-shrink-0">•</span>
-								{/if}
-							</div>
-						{/if}
-
-						<div class="ml-auto flex items-center gap-1">
-							<DropdownMenu.Root>
-								<DropdownMenu.Trigger onclick={(e) => e.stopPropagation()}>
-									{#snippet child({ props })}
-										<div
-											{...props}
-											class="h-4 w-4 opacity-50 hover:opacity-100 inline-flex items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground"
-										>
-											<MoreVertical class="h-3 w-3" />
-										</div>
-									{/snippet}
-								</DropdownMenu.Trigger>
-								<DropdownMenu.Content align="end" class="w-40">
-									<DropdownMenu.Item onclick={() => startRename(tab.id)}>
-										<Edit2 class="mr-2 h-3 w-3" />
-										{$LL.tabs.rename()}
-									</DropdownMenu.Item>
-									<DropdownMenu.Item onclick={() => handleDuplicateTab(tab.id)}>
-										<Copy class="mr-2 h-3 w-3" />
-										{$LL.tabs.duplicate()}
-									</DropdownMenu.Item>
-									<DropdownMenu.Item onclick={() => handleExportTab(tab.id)}>
-										<Download class="mr-2 h-3 w-3" />
-										{$LL.tabs.exportJson()}
-									</DropdownMenu.Item>
-									<DropdownMenu.Separator />
-									<DropdownMenu.Item
-										onclick={() => tabsStore.closeTab(tab.id)}
-										disabled={tabsStore.tabs.length === 1}
-										class="text-destructive focus:text-destructive"
-									>
-										<X class="mr-2 h-3 w-3" />
-										{$LL.tabs.closeTab()}
-									</DropdownMenu.Item>
-								</DropdownMenu.Content>
-							</DropdownMenu.Root>
-
-							{#if tabsStore.tabs.length > 1}
-								<Button
-									variant="ghost"
-									size="icon"
-									class="h-4 w-4 opacity-50 hover:opacity-100"
-									onclick={(e) => handleCloseTab(e, tab.id)}
-								>
-									<X class="h-3 w-3" />
-								</Button>
+	{#if deviceType === 'mobile'}
+		<!-- Mobile: Dropdown Selector -->
+		<div class="flex items-center px-2 py-1.5 gap-2">
+			<DropdownMenu.Root>
+				<DropdownMenu.Trigger
+					class="flex-1 h-11 flex items-center justify-between px-3 rounded-md border bg-background hover:bg-accent transition-colors"
+				>
+					<div class="flex items-center gap-2 flex-1 min-w-0">
+						<FileJson class="h-4 w-4 flex-shrink-0" />
+						<span class="truncate font-medium"
+							>{tabsStore.getActiveTab()?.name || 'Tab'}</span
+						>
+					</div>
+					<ChevronDown class="h-4 w-4 ml-2 flex-shrink-0" />
+				</DropdownMenu.Trigger>
+				<DropdownMenu.Content class="w-[300px]" align="start">
+					{#each tabsStore.tabs as tab (tab.id)}
+						<DropdownMenu.Item
+							onclick={() => tabsStore.switchTab(tab.id)}
+							class="min-h-[44px] flex items-center"
+						>
+							<FileJson class="mr-2 h-4 w-4 flex-shrink-0" />
+							<span class="flex-1 truncate">{tab.name}</span>
+							{#if tab.id === tabsStore.activeTabId}
+								<Check class="ml-2 h-4 w-4 flex-shrink-0" />
 							{/if}
-						</div>
-					</Tabs.Trigger>
-				{/each}
-			</Tabs.List>
-		</Tabs.Root>
+						</DropdownMenu.Item>
+					{/each}
+				</DropdownMenu.Content>
+			</DropdownMenu.Root>
 
-		<div class="ml-2 flex items-center gap-1">
-			<Button
-				variant="ghost"
-				size="icon"
-				class="h-8 w-8"
-				onclick={handleNewTab}
-				title={$LL.tabs.newTab()}
-			>
-				<Plus class="h-4 w-4" />
+			<Button size="icon" onclick={handleNewTab} class="h-11 w-11 flex-shrink-0">
+				<Plus class="h-5 w-5" />
 			</Button>
 
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger
-					class="inline-flex items-center justify-center rounded-md h-8 w-8 hover:bg-accent hover:text-accent-foreground transition-colors"
-					title={$LL.tabs.import()}
+					class="h-11 w-11 inline-flex items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground transition-colors flex-shrink-0"
 				>
-					<Upload class="h-4 w-4" />
+					<MoreVertical class="h-5 w-5" />
 				</DropdownMenu.Trigger>
-				<DropdownMenu.Content align="end">
-					<DropdownMenu.Item onclick={() => fileInput?.click()}>
-						<FileJson class="mr-2 h-3 w-3" />
+				<DropdownMenu.Content align="end" class="w-48">
+					<DropdownMenu.Item
+						onclick={() => startRename(tabsStore.activeTabId || '')}
+						class="min-h-[44px]"
+					>
+						<Edit2 class="mr-2 h-4 w-4" />
+						{$LL.tabs.rename()}
+					</DropdownMenu.Item>
+					<DropdownMenu.Item
+						onclick={() => handleDuplicateTab(tabsStore.activeTabId || '')}
+						class="min-h-[44px]"
+					>
+						<Copy class="mr-2 h-4 w-4" />
+						{$LL.tabs.duplicate()}
+					</DropdownMenu.Item>
+					<DropdownMenu.Item
+						onclick={() => handleExportTab(tabsStore.activeTabId || '')}
+						class="min-h-[44px]"
+					>
+						<Download class="mr-2 h-4 w-4" />
+						{$LL.tabs.exportJson()}
+					</DropdownMenu.Item>
+					<DropdownMenu.Separator />
+					<DropdownMenu.Item onclick={() => fileInput?.click()} class="min-h-[44px]">
+						<Upload class="mr-2 h-4 w-4" />
 						{$LL.tabs.importJsonFile()}
 					</DropdownMenu.Item>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
 		</div>
-	</div>
+
+		<!-- Rename Dialog for Mobile -->
+		{#if renamingTabId}
+			<div class="px-2 pb-2">
+				<div class="flex items-center gap-2">
+					<Input
+						bind:value={renameInput}
+						class="h-11 text-base flex-1"
+						placeholder="탭 이름 입력"
+						onkeydown={(e) => {
+							if (e.key === 'Enter') {
+								confirmRename();
+							} else if (e.key === 'Escape') {
+								cancelRename();
+							}
+						}}
+						autofocus
+					/>
+					<Button onclick={confirmRename} class="h-11">확인</Button>
+					<Button onclick={cancelRename} variant="outline" class="h-11">취소</Button>
+				</div>
+			</div>
+		{/if}
+	{:else}
+		<!-- Desktop/Tablet: Original Tab Bar -->
+		<div class="flex items-center px-2 py-1">
+			<Tabs.Root value={tabsStore.activeTabId} onValueChange={handleTabChange} class="flex-1">
+				<Tabs.List class="h-9 gap-1 bg-transparent p-0">
+					{#each tabsStore.tabs as tab (tab.id)}
+						<Tabs.Trigger
+							value={tab.id}
+							class="relative h-8 min-w-[120px] max-w-[200px] gap-2 rounded-t-md px-3 text-sm data-[state=active]:bg-background data-[state=active]:shadow-md data-[state=active]:border data-[state=active]:border-border data-[state=inactive]:bg-muted/30 data-[state=inactive]:hover:bg-muted/50 transition-colors"
+						>
+							{#if renamingTabId === tab.id}
+								<Input
+									bind:value={renameInput}
+									class="h-6 px-1 text-sm"
+									onclick={(e) => e.stopPropagation()}
+									onkeydown={(e) => {
+										if (e.key === 'Enter') {
+											confirmRename();
+										} else if (e.key === 'Escape') {
+											cancelRename();
+										}
+									}}
+									onblur={confirmRename}
+									autofocus
+								/>
+							{:else}
+								<div class="flex items-center gap-2 overflow-hidden w-full" title={tab.name}>
+									<FileJson class="h-3 w-3 flex-shrink-0" />
+									<span class="truncate">{tab.name}</span>
+									{#if tab.metadata?.lastModified}
+										<span class="text-muted-foreground flex-shrink-0">•</span>
+									{/if}
+								</div>
+							{/if}
+
+							<div class="ml-auto flex items-center gap-1">
+								<DropdownMenu.Root>
+									<DropdownMenu.Trigger onclick={(e) => e.stopPropagation()}>
+										{#snippet child({ props })}
+											<div
+												{...props}
+												class="h-4 w-4 opacity-50 hover:opacity-100 inline-flex items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground"
+											>
+												<MoreVertical class="h-3 w-3" />
+											</div>
+										{/snippet}
+									</DropdownMenu.Trigger>
+									<DropdownMenu.Content align="end" class="w-40">
+										<DropdownMenu.Item onclick={() => startRename(tab.id)}>
+											<Edit2 class="mr-2 h-3 w-3" />
+											{$LL.tabs.rename()}
+										</DropdownMenu.Item>
+										<DropdownMenu.Item onclick={() => handleDuplicateTab(tab.id)}>
+											<Copy class="mr-2 h-3 w-3" />
+											{$LL.tabs.duplicate()}
+										</DropdownMenu.Item>
+										<DropdownMenu.Item onclick={() => handleExportTab(tab.id)}>
+											<Download class="mr-2 h-3 w-3" />
+											{$LL.tabs.exportJson()}
+										</DropdownMenu.Item>
+										<DropdownMenu.Separator />
+										<DropdownMenu.Item
+											onclick={() => tabsStore.closeTab(tab.id)}
+											disabled={tabsStore.tabs.length === 1}
+											class="text-destructive focus:text-destructive"
+										>
+											<X class="mr-2 h-3 w-3" />
+											{$LL.tabs.closeTab()}
+										</DropdownMenu.Item>
+									</DropdownMenu.Content>
+								</DropdownMenu.Root>
+
+								{#if tabsStore.tabs.length > 1}
+									<Button
+										variant="ghost"
+										size="icon"
+										class="h-4 w-4 opacity-50 hover:opacity-100"
+										onclick={(e) => handleCloseTab(e, tab.id)}
+									>
+										<X class="h-3 w-3" />
+									</Button>
+								{/if}
+							</div>
+						</Tabs.Trigger>
+					{/each}
+				</Tabs.List>
+			</Tabs.Root>
+
+			<div class="ml-2 flex items-center gap-1">
+				<Button
+					variant="ghost"
+					size="icon"
+					class="h-8 w-8"
+					onclick={handleNewTab}
+					title={$LL.tabs.newTab()}
+				>
+					<Plus class="h-4 w-4" />
+				</Button>
+
+				<DropdownMenu.Root>
+					<DropdownMenu.Trigger
+						class="inline-flex items-center justify-center rounded-md h-8 w-8 hover:bg-accent hover:text-accent-foreground transition-colors"
+						title={$LL.tabs.import()}
+					>
+						<Upload class="h-4 w-4" />
+					</DropdownMenu.Trigger>
+					<DropdownMenu.Content align="end">
+						<DropdownMenu.Item onclick={() => fileInput?.click()}>
+							<FileJson class="mr-2 h-3 w-3" />
+							{$LL.tabs.importJsonFile()}
+						</DropdownMenu.Item>
+					</DropdownMenu.Content>
+				</DropdownMenu.Root>
+			</div>
+		</div>
+	{/if}
 </div>
 
 <input

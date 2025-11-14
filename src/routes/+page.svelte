@@ -55,8 +55,10 @@
 	let editorRef = $state<JsonEditor | null>(null);
 	let parseTimeout: ReturnType<typeof setTimeout>;
 
-	// Mobile responsive state
-	let isMobile = $state(false);
+	// Responsive state - 3-tier structure
+	type DeviceType = 'mobile' | 'tablet' | 'desktop';
+	let deviceType = $state<DeviceType>('desktop');
+	let isLandscape = $state(false);
 	let mobileView = $state<'editor' | 'graph'>('editor');
 
 	// Local state for URL input (for two-way binding)
@@ -357,19 +359,33 @@
 	});
 
 	onMount(() => {
-		// Check if mobile
-		const checkMobile = () => {
-			isMobile = window.innerWidth < 1024;
+		// Check device type and orientation
+		const checkDevice = () => {
+			const width = window.innerWidth;
+			const height = window.innerHeight;
+
+			// 3-tier responsive breakpoints
+			if (width < 640) {
+				deviceType = 'mobile';
+			} else if (width < 1024) {
+				deviceType = 'tablet';
+			} else {
+				deviceType = 'desktop';
+			}
+
+			// Check landscape orientation
+			isLandscape = width > height;
 		};
-		checkMobile();
-		window.addEventListener('resize', checkMobile);
+		checkDevice();
+		window.addEventListener('resize', checkDevice);
+		window.addEventListener('orientationchange', checkDevice);
 
 		const handleNodeClick = (e: CustomEvent) => {
 			const path = e.detail;
 			if (path && editorRef) {
 				editorRef.navigateToPath(path);
-				// On mobile, switch to editor view when node is clicked
-				if (isMobile) {
+				// On mobile/tablet, switch to editor view when node is clicked
+				if (deviceType === 'mobile' || deviceType === 'tablet') {
 					mobileView = 'editor';
 				}
 			}
@@ -401,7 +417,8 @@
 		window.addEventListener('tabChanged', handleTabChanged as EventListener);
 
 		return () => {
-			window.removeEventListener('resize', checkMobile);
+			window.removeEventListener('resize', checkDevice);
+			window.removeEventListener('orientationchange', checkDevice);
 			window.removeEventListener('nodeClick', handleNodeClick as EventListener);
 			window.removeEventListener('tabChanged', handleTabChanged as EventListener);
 		};
@@ -414,8 +431,58 @@
 		<TabBar />
 	</div>
 
-	{#if isMobile}
-		<!-- Mobile Layout: Tabs for Editor/Graph -->
+	{#if deviceType === 'mobile' && isLandscape}
+		<!-- Mobile Landscape: Split View -->
+		<Resizable.PaneGroup direction="horizontal" class="flex-1">
+			<Resizable.Pane defaultSize={50} minSize={30}>
+				<div class="h-full flex flex-col overflow-hidden max-w-full">
+					<div class="flex flex-col border-b bg-muted/50 flex-shrink-0 max-w-full">
+						<EditorToolbar
+							{httpMethod}
+							bind:url={urlInputLocal}
+							{isLoading}
+							onMethodChange={(method) => saveUrlAndMethod(undefined, method)}
+							onUrlChange={(url) => (urlInputLocal = url)}
+							onUrlBlur={() => saveUrlAndMethod(urlInputLocal, undefined)}
+							onGo={fetchJsonFromUrl}
+							onSettings={() => (isDialogOpen = true)}
+						/>
+						<EditorActions
+							onClear={clearJson}
+							onCopy={copyJson}
+							onFormat={formatJson}
+							onMinify={minifyJson}
+							onRegenerate={regenerateValues}
+						/>
+					</div>
+					<div class="flex-1 overflow-hidden min-h-0 max-w-full" style="max-width: 100vw; position: relative;">
+						{#key tabsStore.activeTabId}
+							<JsonEditor bind:value={editorValue} bind:this={editorRef} class="h-full w-full absolute inset-0" />
+						{/key}
+					</div>
+				</div>
+			</Resizable.Pane>
+
+			<Resizable.Handle withHandle />
+
+			<Resizable.Pane defaultSize={50} minSize={30}>
+				<div class="h-full flex flex-col overflow-hidden">
+					<div class="flex-1 overflow-hidden">
+						{#key tabsStore.activeTabId}
+							{#if parsedJson}
+								<JsonGraph jsonData={parsedJson} jsonString={editorValue} class="h-full" />
+							{:else}
+								<div class="h-full flex items-center justify-center text-muted-foreground">
+									{$LL.editor.placeholder()}
+								</div>
+							{/if}
+						{/key}
+					</div>
+				</div>
+			</Resizable.Pane>
+		</Resizable.PaneGroup>
+	{:else if deviceType === 'mobile' || deviceType === 'tablet'}
+		<!-- Mobile/Tablet Portrait: Tabs for Editor/Graph -->
 		<Tabs.Root bind:value={mobileView} class="flex-1 flex flex-col overflow-hidden min-h-0 max-w-full">
 			<Tabs.List class="grid w-full grid-cols-2 h-10 px-2 flex-shrink-0">
 				<Tabs.Trigger value="editor">{$LL.navigation.editor()}</Tabs.Trigger>
@@ -512,34 +579,47 @@
 	{/if}
 
 	<!-- Footer -->
-	<footer class="h-8 border-t bg-card flex items-center px-4 text-sm text-muted-foreground">
-		<span>{$LL.footer.ready()}</span>
-		{#if httpStatusCode !== null}
-			<span class="ml-4 flex items-center gap-2">
-				<span
-					class={httpStatusCode >= 200 && httpStatusCode < 300
-						? 'text-green-600'
-						: httpStatusCode >= 400
-							? 'text-red-600'
-							: 'text-yellow-600'}
-				>
-					HTTP {httpStatusCode}
+	<footer class="min-h-8 h-auto border-t bg-card px-3 py-1.5 text-xs md:text-sm">
+		<div class="flex flex-col md:flex-row md:items-center gap-1 md:gap-0">
+			<!-- Error or Ready status -->
+			{#if error}
+				<div class="flex items-start md:items-center gap-2 flex-1">
+					<span class="text-destructive font-medium break-words">{error}</span>
+				</div>
+			{:else}
+				<span class="text-muted-foreground">{$LL.footer.ready()}</span>
+			{/if}
+
+			<!-- HTTP Status info -->
+			{#if httpStatusCode !== null}
+				<span class="flex items-center gap-2 md:ml-4">
+					<span class="hidden md:inline text-muted-foreground">|</span>
+					<span
+						class={httpStatusCode >= 200 && httpStatusCode < 300
+							? 'text-green-600 dark:text-green-400 font-medium'
+							: httpStatusCode >= 400
+								? 'text-red-600 dark:text-red-400 font-medium'
+								: 'text-yellow-600 dark:text-yellow-400 font-medium'}
+					>
+						HTTP {httpStatusCode}
+					</span>
+					{#if responseTime !== null}
+						<span class="text-muted-foreground">•</span>
+						<span class="text-muted-foreground">{responseTime}ms</span>
+					{/if}
 				</span>
-				{#if responseTime !== null}
-					<span class="text-muted-foreground">|</span>
-					<span>{responseTime}ms</span>
-				{/if}
-			</span>
-		{/if}
-		{#if error}
-			<span class="ml-4 text-destructive">{error}</span>
-		{/if}
-		<div class="ml-auto flex items-center gap-1">
-			<span
-				>Copyright © <a href="https://podosoft.io" target="_blank" class="hover:underline"
-					>PODOSOFT.</a
-				></span
-			>
+			{/if}
+
+			<!-- Copyright -->
+			<div class="md:ml-auto flex items-center gap-1 text-muted-foreground mt-1 md:mt-0">
+				<span class="text-[10px] md:text-xs"
+					>Copyright © <a
+						href="https://podosoft.io"
+						target="_blank"
+						class="hover:underline hover:text-foreground transition-colors">PODOSOFT.</a
+					></span
+				>
+			</div>
 		</div>
 	</footer>
 </div>
