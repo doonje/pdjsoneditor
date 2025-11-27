@@ -15,7 +15,19 @@
 	import { STORAGE_KEYS } from '$lib/constants';
 	import { requestJson, type HttpMethod } from '$lib/services/http';
 	import { logger } from '$lib/logger';
-	import { regenerateJSONValues, generateSampleJSON } from '$lib/utils/faker-generator';
+	import { graphLoading } from '$lib/stores/graphLoading';
+
+	// faker-generator는 무거운 라이브러리(@faker-js/faker)를 포함하므로
+	// 사용 시점에 동적 import로 로드하여 초기 번들 크기 최적화
+	// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+	let fakerModule: typeof import('$lib/utils/faker-generator') | null = null;
+
+	async function loadFakerGenerator() {
+		if (!fakerModule) {
+			fakerModule = await import('$lib/utils/faker-generator');
+		}
+		return fakerModule;
+	}
 
 	// Create a local state for the editor that syncs with the active tab
 	let editorValue = $state('');
@@ -206,10 +218,12 @@
 		}
 	}
 
-	function regenerateValues() {
+	async function regenerateValues() {
 		try {
 			const activeTab = tabsStore.getActiveTab();
 			if (activeTab) {
+				// 동적으로 faker 모듈 로드 (첫 사용 시에만 로드됨)
+				const { regenerateJSONValues, generateSampleJSON } = await loadFakerGenerator();
 				let regenerated;
 
 				// Check if current JSON is empty or invalid
@@ -326,11 +340,10 @@
 		}
 
 		// Set new timeout for 500ms delay
-		parseTimeout = setTimeout(async () => {
+		parseTimeout = setTimeout(() => {
 			try {
 				// Activate graph loading overlay before parsing to improve perceived responsiveness with large inputs
-				const mod = await import('$lib/stores/graphLoading');
-				mod.graphLoading.set({ active: true, phase: 'build', progress: 0 });
+				graphLoading.set({ active: true, phase: 'build', progress: 0 });
 				parsedJson = JSON.parse(currentJsonValue);
 				error = '';
 
