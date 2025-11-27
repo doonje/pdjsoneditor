@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import JsonEditor from '$lib/components/JsonEditor.svelte';
-	import JsonGraph from '$lib/components/JsonGraph.svelte';
+	import { browser } from '$app/environment';
 	import TabBar from '$lib/components/TabBar.svelte';
 	import EditorToolbar from '$lib/components/EditorToolbar.svelte';
 	import EditorActions from '$lib/components/EditorActions.svelte';
@@ -16,6 +15,13 @@
 	import { requestJson, type HttpMethod } from '$lib/services/http';
 	import { logger } from '$lib/logger';
 	import { graphLoading } from '$lib/stores/graphLoading';
+	import type { ComponentType } from 'svelte';
+
+	// 브라우저 전용 컴포넌트 (CodeMirror, @xyflow/svelte, Web Workers 사용)
+	// SSR 활성화를 위해 동적 import로 로드
+	let JsonEditorComponent = $state<ComponentType | null>(null);
+	let JsonGraphComponent = $state<ComponentType | null>(null);
+	let componentsLoaded = $state(false);
 
 	// faker-generator는 무거운 라이브러리(@faker-js/faker)를 포함하므로
 	// 사용 시점에 동적 import로 로드하여 초기 번들 크기 최적화
@@ -27,6 +33,24 @@
 			fakerModule = await import('$lib/utils/faker-generator');
 		}
 		return fakerModule;
+	}
+
+	// 브라우저 전용 컴포넌트 로드
+	async function loadBrowserComponents() {
+		if (browser && !componentsLoaded) {
+			const [editorModule, graphModule] = await Promise.all([
+				import('$lib/components/JsonEditor.svelte'),
+				import('$lib/components/JsonGraph.svelte')
+			]);
+			JsonEditorComponent = editorModule.default;
+			JsonGraphComponent = graphModule.default;
+			componentsLoaded = true;
+		}
+	}
+
+	// 컴포넌트 즉시 로드 시작 (브라우저에서만)
+	if (browser) {
+		loadBrowserComponents();
 	}
 
 	// Create a local state for the editor that syncs with the active tab
@@ -64,7 +88,8 @@
 
 	let parsedJson = $state<JsonValue | null>(null);
 	let error = $state<string>('');
-	let editorRef = $state<JsonEditor | null>(null);
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	let editorRef = $state<any>(null);
 	let parseTimeout: ReturnType<typeof setTimeout>;
 
 	// Responsive state - 3-tier structure
@@ -470,7 +495,13 @@
 					</div>
 					<div class="flex-1 overflow-hidden min-h-0 max-w-full" style="max-width: 100vw; position: relative;">
 						{#key tabsStore.activeTabId}
-							<JsonEditor bind:value={editorValue} bind:this={editorRef} class="h-full w-full absolute inset-0" />
+							{#if componentsLoaded && JsonEditorComponent}
+								<JsonEditorComponent bind:value={editorValue} bind:this={editorRef} class="h-full w-full absolute inset-0" />
+							{:else}
+								<div class="h-full w-full flex items-center justify-center bg-muted/30 animate-pulse">
+									<span class="text-muted-foreground">Loading editor...</span>
+								</div>
+							{/if}
 						{/key}
 					</div>
 				</div>
@@ -482,8 +513,12 @@
 				<div class="h-full flex flex-col overflow-hidden">
 					<div class="flex-1 overflow-hidden">
 						{#key tabsStore.activeTabId}
-							{#if parsedJson}
-								<JsonGraph jsonData={parsedJson} jsonString={editorValue} class="h-full" />
+							{#if componentsLoaded && JsonGraphComponent && parsedJson}
+								<JsonGraphComponent jsonData={parsedJson} jsonString={editorValue} class="h-full" />
+							{:else if !componentsLoaded}
+								<div class="h-full flex items-center justify-center bg-muted/30 animate-pulse">
+									<span class="text-muted-foreground">Loading graph...</span>
+								</div>
 							{:else}
 								<div class="h-full flex items-center justify-center text-muted-foreground">
 									{$LL.editor.placeholder()}
@@ -523,14 +558,24 @@
 				</div>
 				<div class="flex-1 overflow-hidden min-h-0 max-w-full" style="max-width: 100vw; position: relative;">
 					{#key tabsStore.activeTabId}
-						<JsonEditor bind:value={editorValue} bind:this={editorRef} class="h-full w-full absolute inset-0" />
+						{#if componentsLoaded && JsonEditorComponent}
+							<JsonEditorComponent bind:value={editorValue} bind:this={editorRef} class="h-full w-full absolute inset-0" />
+						{:else}
+							<div class="h-full w-full flex items-center justify-center bg-muted/30 animate-pulse">
+								<span class="text-muted-foreground">Loading editor...</span>
+							</div>
+						{/if}
 					{/key}
 				</div>
 			</Tabs.Content>
 			<Tabs.Content value="graph" class="flex-1 overflow-hidden mt-0 min-h-0 max-w-full">
 				{#key tabsStore.activeTabId}
-					{#if parsedJson}
-						<JsonGraph jsonData={parsedJson} jsonString={editorValue} class="h-full w-full" />
+					{#if componentsLoaded && JsonGraphComponent && parsedJson}
+						<JsonGraphComponent jsonData={parsedJson} jsonString={editorValue} class="h-full w-full" />
+					{:else if !componentsLoaded}
+						<div class="h-full flex items-center justify-center bg-muted/30 animate-pulse">
+							<span class="text-muted-foreground">Loading graph...</span>
+						</div>
 					{:else}
 						<div class="h-full flex items-center justify-center text-muted-foreground">
 							{$LL.editor.placeholder()}
@@ -565,7 +610,13 @@
 					</div>
 					<div class="flex-1 overflow-hidden max-w-full">
 						{#key tabsStore.activeTabId}
-							<JsonEditor bind:value={editorValue} bind:this={editorRef} class="h-full w-full" />
+							{#if componentsLoaded && JsonEditorComponent}
+								<JsonEditorComponent bind:value={editorValue} bind:this={editorRef} class="h-full w-full" />
+							{:else}
+								<div class="h-full w-full flex items-center justify-center bg-muted/30 animate-pulse">
+									<span class="text-muted-foreground">Loading editor...</span>
+								</div>
+							{/if}
 						{/key}
 					</div>
 				</div>
@@ -577,8 +628,12 @@
 				<div class="h-full flex flex-col overflow-hidden">
 					<div class="flex-1 overflow-hidden">
 						{#key tabsStore.activeTabId}
-							{#if parsedJson}
-								<JsonGraph jsonData={parsedJson} jsonString={editorValue} class="h-full" />
+							{#if componentsLoaded && JsonGraphComponent && parsedJson}
+								<JsonGraphComponent jsonData={parsedJson} jsonString={editorValue} class="h-full" />
+							{:else if !componentsLoaded}
+								<div class="h-full flex items-center justify-center bg-muted/30 animate-pulse">
+									<span class="text-muted-foreground">Loading graph...</span>
+								</div>
 							{:else}
 								<div class="h-full flex items-center justify-center text-muted-foreground">
 									{$LL.editor.placeholder()}
