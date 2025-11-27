@@ -15,6 +15,9 @@ pipeline {
         // Slack 웹훅
         SLACK_WEBHOOK = credentials('SLACK_WEBHOOK')
 
+        // Portainer 설정
+        PORTAINER_WEBHOOK_DEV_UTILS = credentials('PORTAINER_WEBHOOK_DEV_UTILS')
+
         // Node.js 버전
         NODE_VERSION = '20'
     }
@@ -116,6 +119,27 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy to Portainer') {
+            steps {
+                script {
+                    echo "🚀 Deploying to Portainer..."
+
+                    sh '''
+                        echo "📡 Triggering Portainer webhook for dev-utils..."
+
+                        HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST "${PORTAINER_WEBHOOK_DEV_UTILS}")
+
+                        if [ "${HTTP_CODE}" -eq 200 ] || [ "${HTTP_CODE}" -eq 204 ]; then
+                            echo "✅ Portainer deployment triggered successfully (HTTP ${HTTP_CODE})"
+                        else
+                            echo "⚠️ Portainer deployment returned HTTP ${HTTP_CODE}"
+                            exit 1
+                        fi
+                    '''
+                }
+            }
+        }
     }
 
     post {
@@ -175,6 +199,10 @@ pipeline {
                               {
                                 "type": "mrkdwn",
                                 "text": "*Docker 이미지:*\\ndoonje/dev-utils:${imageTag}"
+                              },
+                              {
+                                "type": "mrkdwn",
+                                "text": "*배포 상태:*\\n✅ Portainer 배포 완료"
                               }
                             ]
                           },
